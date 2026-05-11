@@ -1,0 +1,112 @@
+/**
+ * layout.css — Page-level structural styles
+ *
+ * Defines the overall page layout: header, main dashboard grid,
+ * chart cards, and footer. Responsive adjustments are included.
+ */
+
+/* ── Application shell ───────────────────────────────────────── */
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+
+.app-header {
+  padding: var(--space-8) var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  letter-spacing: 0.02em;
+}
+
+.app-header .subtitle {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* ── Dashboard grid ──────────────────────────────────────────── */
+
+.dashboard {
+  flex: 1;
+  display: grid;
+  /* Single column on mobile, up to 2 on tablets, 3 on desktop */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-6);
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ── Chart card ──────────────────────────────────────────────── */
+
+.chart-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.chart-card .chart-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+.chart-card .chart-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* ── Placeholder (shown before charts are added) ─────────────── */
+
+.placeholder {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: var(--space-8);
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+
+.app-footer {
+  padding: var(--space-6);
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* ── Responsive tweaks ───────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .app-header {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .dashboard {
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+}

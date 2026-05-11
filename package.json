@@ -1,0 +1,34 @@
+{
+  "name": "data-visual",
+  "version": "1.0.0",
+  "description": "New York hotel data visualization dashboard built with D3.js and Vite",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuhbu170005/data-visual.git"
+  },
+  "keywords": [
+    "d3",
+    "visualization",
+    "dashboard",
+    "vite",
+    "data"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuhbu170005/data-visual/issues"
+  },
+  "homepage": "https://github.com/yuhbu170005/data-visual#readme",
+  "devDependencies": {
+    "vite": "^8.0.12"
+  },
+  "dependencies": {
+    "d3": "^7.9.0"
+  }
+}
