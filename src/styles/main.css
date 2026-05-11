@@ -1,0 +1,12 @@
+/**
+ * main.css — Global stylesheet entry point
+ *
+ * Import order matters:
+ *   1. variables  — CSS custom properties (design tokens)
+ *   2. reset      — Normalize browser defaults
+ *   3. layout     — Page-level structural styles
+ */
+
+@import './variables.css';
+@import './reset.css';
+@import './layout.css';

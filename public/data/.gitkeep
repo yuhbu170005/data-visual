@@ -1,0 +1,4 @@
+# Place dataset files here (CSV, JSON, GeoJSON).
+# Example: hotels.csv, nyc-boroughs.geojson
+#
+# Do NOT commit large files — link to external sources or use Git LFS instead.
