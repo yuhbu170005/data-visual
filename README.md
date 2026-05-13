@@ -35,6 +35,28 @@ cd data-visual
 npm install
 ```
 
+### Data Processing Environment (Python)
+
+If you need to process the raw datasets to generate chart-ready JSON files, you will need a Python environment.
+
+1. **Set up a virtual environment:**
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run data processing scripts:**
+   ```bash
+   python process_q2.py
+   python process_q3.py
+   ```
+
+
 ---
 
 ## Scripts
