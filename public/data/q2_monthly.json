@@ -1,0 +1,110 @@
+[
+  {
+    "month_index": 1,
+    "month": "January",
+    "Bronx": 274509.0,
+    "Brooklyn": 12066534.0,
+    "Manhattan": 29869434.0,
+    "Queens": 2191258.0,
+    "Staten Island": 92257.0
+  },
+  {
+    "month_index": 2,
+    "month": "February",
+    "Bronx": 395880.0,
+    "Brooklyn": 12158482.0,
+    "Manhattan": 22753798.0,
+    "Queens": 2445367.0,
+    "Staten Island": 110355.0
+  },
+  {
+    "month_index": 3,
+    "month": "March",
+    "Bronx": 404406.0,
+    "Brooklyn": 11939645.0,
+    "Manhattan": 27012790.0,
+    "Queens": 2700794.0,
+    "Staten Island": 135058.0
+  },
+  {
+    "month_index": 4,
+    "month": "April",
+    "Bronx": 351550.0,
+    "Brooklyn": 11974211.0,
+    "Manhattan": 24298947.0,
+    "Queens": 4621530.0,
+    "Staten Island": 122354.0
+  },
+  {
+    "month_index": 5,
+    "month": "May",
+    "Bronx": 574798.0,
+    "Brooklyn": 16940284.0,
+    "Manhattan": 29939355.0,
+    "Queens": 8846457.0,
+    "Staten Island": 244030.0
+  },
+  {
+    "month_index": 6,
+    "month": "June",
+    "Bronx": 544263.0,
+    "Brooklyn": 15697239.0,
+    "Manhattan": 39070960.0,
+    "Queens": 22112537.0,
+    "Staten Island": 213171.0
+  },
+  {
+    "month_index": 7,
+    "month": "July",
+    "Bronx": 594178.0,
+    "Brooklyn": 16373290.0,
+    "Manhattan": 35223046.0,
+    "Queens": 20346373.0,
+    "Staten Island": 239453.0
+  },
+  {
+    "month_index": 8,
+    "month": "August",
+    "Bronx": 992167.0,
+    "Brooklyn": 20265655.0,
+    "Manhattan": 31734178.0,
+    "Queens": 9229545.0,
+    "Staten Island": 454364.0
+  },
+  {
+    "month_index": 9,
+    "month": "September",
+    "Bronx": 935559.0,
+    "Brooklyn": 20537556.0,
+    "Manhattan": 58509243.0,
+    "Queens": 8705776.0,
+    "Staten Island": 437140.0
+  },
+  {
+    "month_index": 10,
+    "month": "October",
+    "Bronx": 968513.0,
+    "Brooklyn": 30685812.0,
+    "Manhattan": 66904427.0,
+    "Queens": 8788177.0,
+    "Staten Island": 457349.0
+  },
+  {
+    "month_index": 11,
+    "month": "November",
+    "Bronx": 859192.0,
+    "Brooklyn": 23407705.0,
+    "Manhattan": 99988059.0,
+    "Queens": 11377235.0,
+    "Staten Island": 386904.0
+  },
+  {
+    "month_index": 12,
+    "month": "December",
+    "Bronx": 551339.0,
+    "Brooklyn": 18509419.0,
+    "Manhattan": 87593868.0,
+    "Queens": 11451918.0,
+    "Staten Island": 223718.0
+  }
+]
