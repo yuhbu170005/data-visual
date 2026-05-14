@@ -1,14 +1,12 @@
 /**
  * main.js — Application entry point
- *
- * Bootstraps the application by importing global styles
- * and initializing the dashboard.
  */
-
 import './styles/main.css';
 import { initDashboard } from './app.js';
 
-// Initialize the dashboard once the DOM is ready
+// Đảm bảo DOM đã sẵn sàng trước khi chạy logic D3
 document.addEventListener('DOMContentLoaded', () => {
-  initDashboard();
+  initDashboard().catch(err => {
+    console.error("Dashboard initialization failed:", err);
+  });
 });

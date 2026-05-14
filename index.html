@@ -1,33 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New York Hotel Data Visualization</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="/src/styles/main.css" />
-  </head>
-  <body>
-    <!-- Application root -->
-    <div id="app">
-      <!-- Header -->
-      <header class="app-header">
-        <h1>New York Hotel Dashboard</h1>
-        <p class="subtitle">Interactive data visualization of New York hotel data</p>
-      </header>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New York Hotel & Host Quality Dashboard</title>
+  
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/src/styles/main.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="dash-header">
+      <div class="header-inner">
+        <div class="header-title">
+          <span class="header-tag">University Assignment · Data Visualization</span>
+          <h1>New York Host Quality Dashboard</h1>
+          <p class="header-sub">Phân tích dữ liệu lưu trú tại New York City</p>
+        </div>
+        <div class="header-kpis" id="kpi-bar"></div>
+      </div>
+    </header>
 
-      <!-- Main dashboard area -->
-      <main class="dashboard">
-        <!-- Chart panels will be inserted here by JavaScript -->
-      </main>
+    <main class="dash-grid dashboard">
+      
+      <section class="card card--full" id="chart-lollipop">
+        <div class="card-header">
+          <div>
+            <span class="card-tag">Analyze + Identify</span>
+            <h2 class="card-title">Xếp hạng Rating theo Khu vực & Loại phòng</h2>
+            <p class="card-desc">Mỗi chấm tương ứng AVG rating của 1 loại phòng trong 1 quận. Chấm càng nằm về bên trái càng cần ưu tiên hỗ trợ.</p>
+          </div>
+        </div>
+        <div class="chart-wrap" id="lollipop-svg"></div>
+      </section>
 
-      <!-- Footer -->
-      <footer class="app-footer">
-        <p>Data Visualization &mdash; University Assignment</p>
-      </footer>
-    </div>
+      <section class="card card--half" id="chart-line">
+        <div class="card-header">
+          <div>
+            <span class="card-tag">Correlation</span>
+            <h2 class="card-title">Thâm niên × Giá thuê</h2>
+            <p class="card-desc">So sánh giá trung bình theo năm gia nhập giữa Superhost và Non-superhost.</p>
+          </div>
+        </div>
+        <div class="chart-wrap" id="line-svg"></div>
+      </section>
 
-    <!-- Entry point -->
-    <script type="module" src="/src/main.js"></script>
-  </body>
+      <section class="card card--half" id="chart-stacked">
+        <div class="card-header">
+          <div>
+            <span class="card-tag">Structure</span>
+            <h2 class="card-title">Cơ cấu Single vs Multi-host theo Quận</h2>
+            <p class="card-desc">Màu cam: chủ 1 phòng, màu xanh: chủ sở hữu nhiều phòng.</p>
+          </div>
+        </div>
+        <div class="chart-wrap" id="stacked-svg"></div>
+      </section>
+
+      <section class="card card--full" id="chart-response">
+        <div class="card-header">
+          <div>
+            <span class="card-tag">Action Required</span>
+            <h2 class="card-title">Host phản hồi chậm theo Khu vực</h2>
+            <p class="card-desc">Dữ liệu tính trên các phòng đang hoạt động. Màu sắc biểu thị mức độ trễ của phản hồi.</p>
+          </div>
+        </div>
+        <div class="chart-wrap" id="response-svg"></div>
+      </section>
+
+    </main>
+
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p>Data Visualization &mdash; University Assignment &copy; 2024</p>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>
