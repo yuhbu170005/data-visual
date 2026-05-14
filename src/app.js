@@ -11,6 +11,8 @@ import { drawResponseBar } from './charts/responseBar.js';
 import { drawQ2Monthly }   from './charts/q2_monthly.js';
 import { drawQ3Sweetspot } from './charts/q3_sweetspot.js';
 import { drawQ3Slope }     from './charts/q3_slope.js';
+import { drawQ6SupplyDemand } from './charts/q6_supply_demand.js';
+import { drawQ7StackedArea } from './charts/q7_stacked_area.js';
 
 /**
  * Khởi tạo Dashboard
@@ -45,6 +47,8 @@ export async function initDashboard() {
     const kpiData = await loadJSON('/data/kpi.json');
     const q2Data = await loadJSON('/data/q2_monthly.json');
     const q3Data = await loadJSON('/data/q3_agg.json');
+    const q6Data = await loadJSON('/data/q6_supply_demand.json');
+    const q7Data = await loadJSON('/data/q7_reviews_area.json');
 
     renderKPIs(data, kpiData);
 
@@ -52,6 +56,16 @@ export async function initDashboard() {
     drawQ2Monthly(q2Data, 'q2-monthly-svg');
     drawQ3Sweetspot(q3Data, 'q3-sweetspot-svg');
     drawQ3Slope(q3Data, 'q3-slope-svg');
+    drawQ6SupplyDemand(q6Data, 'q6-chart-svg');
+    drawQ7StackedArea(q7Data, 'q7-chart-svg');
+    
+    // Add event listeners for Q6 filters
+    const q6NeighFilter = document.getElementById('q6-filter-neigh');
+    const q6RoomFilter = document.getElementById('q6-filter-room');
+    if (q6NeighFilter) q6NeighFilter.addEventListener('change', () => drawQ6SupplyDemand(q6Data, 'q6-chart-svg'));
+    if (q6RoomFilter) q6RoomFilter.addEventListener('change', () => drawQ6SupplyDemand(q6Data, 'q6-chart-svg'));
+
+    // Q7 Stacked Area Chart - No filters needed
 
     // 4. Khởi tạo các biểu đồ cũ
     // Lưu ý: Các ID như #lollipop-svg đã được định nghĩa trong file index.html chúng ta đã merge

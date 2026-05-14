@@ -35,7 +35,7 @@ export function drawLineChart(data, containerId) {
   })
 
   const margin = { top: 20, right: 20, bottom: 40, left: 55 }
-  const width  = container.clientWidth || 500
+  const width = container.clientWidth || 500
   const height = 280
 
   const svg = d3.select(`#${containerId}`)
@@ -48,7 +48,7 @@ export function drawLineChart(data, containerId) {
   const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
 
   const allYears = [...new Set(filtered.map(d => d.hostSinceYear))].sort()
-  const allAvgs  = series.flatMap(s => s.points.map(p => p.avg))
+  const allAvgs = series.flatMap(s => s.points.map(p => p.avg))
 
   const x = d3.scaleLinear().domain(d3.extent(allYears)).range([0, innerW])
   const y = d3.scaleLinear().domain([0, d3.max(allAvgs) * 1.1]).range([innerH, 0]).nice()
@@ -125,6 +125,7 @@ export function drawLineChart(data, containerId) {
   const legendEl = document.createElement('div')
   legendEl.className = 'legend'
   legendEl.style.color = '#333'
+  legendEl.innerHTML = `<div style="width:100%; font-weight:600; font-size:14px; margin-bottom:4px;">Loại Host (Host type)</div>`
   Object.entries(COLORS).forEach(([key, color]) => {
     const label = key === 'true' ? 'Superhost' : 'Non-superhost'
     legendEl.innerHTML += `<div class="legend-item"><span class="legend-dot" style="background:${color}"></span>${label}</div>`

@@ -4,22 +4,24 @@ import json
 print("Loading data...")
 lst = pd.read_csv("public/data/listings_cleaned.csv", low_memory=False)
 
-# Clean price
-lst['price'] = lst['price'].replace('[\$,]', '', regex=True).astype(float)
-lst = lst[lst['price'] > 0]
+# Clean price for listings that have it
+lst['price'] = lst['price'].replace(r'[\$,]', '', regex=True).astype(float, errors='ignore')
+lst['price'] = pd.to_numeric(lst['price'], errors='coerce')
 
-# Occupancy rate calculation
+# Total listings = ALL listings (not filtered by price)
+total_listings = len(lst)
+
+# Occupancy rate calculation for all listings
 lst['occupancy_rate'] = (365 - lst['availability_365']) / 365
 avg_occupancy = lst['occupancy_rate'].mean()
 
-total_listings = len(lst)
-
-# Load calendar to compute precise total revenue
+# Load calendar to compute precise total revenue (using only listings with valid price)
 cal = pd.read_csv("public/data/calendar_cleaned.csv", low_memory=False)
 booked = cal[cal['available'] == False].copy()
 
-# Join with listings to get the price per day
-booked = booked.merge(lst[['id', 'price']], left_on='listing_id', right_on='id', how='inner')
+# Filter listings with price for revenue calculation
+lst_with_price = lst[lst['price'] > 0].copy()
+booked = booked.merge(lst_with_price[['id', 'price']], left_on='listing_id', right_on='id', how='inner')
 
 total_est_rev = booked['price'].sum()
 

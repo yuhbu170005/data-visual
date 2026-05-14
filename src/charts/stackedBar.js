@@ -20,7 +20,7 @@ export function drawStackedBar(data, containerId) {
   const rows = []
   grouped.forEach((typeMap, neighbourhood) => {
     const single = typeMap.get('Single-host') || 0
-    const multi  = typeMap.get('Multi-host')  || 0
+    const multi = typeMap.get('Multi-host') || 0
     rows.push({ neighbourhood, 'Single-host': single, 'Multi-host': multi, total: single + multi })
   })
 
@@ -33,8 +33,8 @@ export function drawStackedBar(data, containerId) {
   const stacked = d3.stack().keys(keys)(top)
 
   const margin = { top: 10, right: 20, bottom: 40, left: 150 }
-  const width  = container.clientWidth || 500
-  const rowH   = 20
+  const width = container.clientWidth || 500
+  const rowH = 20
   const height = top.length * rowH + margin.top + margin.bottom
 
   const svg = d3.select(`#${containerId}`)
@@ -92,6 +92,7 @@ export function drawStackedBar(data, containerId) {
   // Legend
   const legendEl = document.createElement('div')
   legendEl.className = 'legend'
+  legendEl.innerHTML = `<div style="width:100%; font-weight:600; font-size:14px; margin-bottom:4px; color:#333;">Quy mô sở hữu (Host type)</div>`
   Object.entries(COLORS).forEach(([label, color]) => {
     legendEl.innerHTML += `<div class="legend-item"><span class="legend-rect" style="background:${color}"></span>${label}</div>`
   })

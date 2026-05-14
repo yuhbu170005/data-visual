@@ -59,6 +59,39 @@
         </div>
         <div class="chart-wrap" id="q3-slope-svg"></div>
       </section>
+      
+      <!-- BIỂU ĐỒ SUPPLY & DEMAND Q6 -->
+      <section class="card card--full" id="chart-q6">
+        <div class="card-header">
+          <div>
+            <span class="card-tag">Market Operations</span>
+            <h2 class="card-title">Supply-Demand Balance & Seasonal Booking Trends</h2>
+            <p class="card-desc">Time-series analysis of booking demand against room availability. The grey area represents total room supply and unused availability, while colored lines track booked nights by room type. Hover to view occupancy metrics.</p>
+          </div>
+          
+          <div style="display:flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+            <select id="q6-filter-neigh" style="padding: 6px; border-radius: 6px; border: 1px solid var(--border);">
+              <option value="All">All Neighbourhood Groups</option>
+            </select>
+            <select id="q6-filter-room" style="padding: 6px; border-radius: 6px; border: 1px solid var(--border);">
+              <option value="All">All Room Types</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-wrap" id="q6-chart-svg" style="min-height: 450px;"></div>
+      </section>
+
+      <!-- BIỂU ĐỒ STACKED AREA CHART Q7 -->
+      <section class="card card--full" id="chart-q7">
+        <div class="card-header">
+          <div>
+            <span class="card-tag">Growth Tracking</span>
+            <h2 class="card-title">Top 5 Listings — Monthly Review Volume Trends</h2>
+            <p class="card-desc">Stacked area chart tracking the number of reviews per month (Nov 2024 – Oct 2025) for the top 5 listings with highest average reviews per month. Hover to see breakdown by listing.</p>
+          </div>
+        </div>
+        <div class="chart-wrap" id="q7-chart-svg" style="min-height: 500px;"></div>
+      </section>
       <!-- KẾT THÚC CÁC BIỂU ĐỒ MỚI -->
 
       <section class="card card--full" id="chart-lollipop">

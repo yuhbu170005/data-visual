@@ -4,7 +4,7 @@ import { createTooltip } from '../components/tooltip.js'
 const SLOW_TIMES = ['within a few hours', 'within a day', 'a few days or more']
 const COLORS = {
   'within a few hours': '#ffa94d',
-  'within a day':       '#ff6b6b',
+  'within a day': '#ff6b6b',
   'a few days or more': '#da77f2',
 }
 const TOP_N = 25
@@ -47,8 +47,8 @@ export function drawResponseBar(data, containerId) {
   const stacked = d3.stack().keys(SLOW_TIMES)(top)
 
   const margin = { top: 10, right: 20, bottom: 40, left: 160 }
-  const width  = container.clientWidth || 900
-  const rowH   = 22
+  const width = container.clientWidth || 900
+  const rowH = 22
   const height = top.length * rowH + margin.top + margin.bottom
 
   const svg = d3.select(`#${containerId}`)
@@ -106,6 +106,7 @@ export function drawResponseBar(data, containerId) {
   // Legend
   const legendEl = document.createElement('div')
   legendEl.className = 'legend'
+  legendEl.innerHTML = `<div style="width:100%; font-weight:600; font-size:14px; margin-bottom:4px; color:#333;">Thời gian phản hồi (Response Time)</div>`
   Object.entries(COLORS).forEach(([label, color]) => {
     legendEl.innerHTML += `<div class="legend-item"><span class="legend-rect" style="background:${color}"></span>${label}</div>`
   })

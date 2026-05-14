@@ -159,6 +159,7 @@ export function drawLollipop(data, containerId) {
   const legendEl = document.createElement('div')
   legendEl.className = 'legend'
   legendEl.style.color = '#333'
+  legendEl.innerHTML = `<div style="width:100%; font-weight:600; font-size:14px; margin-bottom:4px;">Loại phòng (Room type)</div>`
   Object.entries(ROOM_COLORS).forEach(([label, color]) => {
     legendEl.innerHTML += `
       <div class="legend-item">
