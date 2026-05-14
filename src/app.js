@@ -105,31 +105,42 @@ function renderKPIs(data, kpiData) {
   const kpiContainer = document.getElementById('kpi-bar');
   if (!kpiContainer) return;
 
-  // Logic tính toán cho các chỉ số host cũ
+  // 1. Tính toán KPIs từ dữ liệu đã lọc (dynamic)
+  const totalListings = data.length;
+  const totalEstRev   = d3.sum(data, d => (d.price || 0) * (365 - d.availability365));
+  const avgOccupancy  = d3.mean(data, d => (365 - d.availability365) / 365) * 100 || 0;
+  const avgPrice      = d3.mean(data, d => d.price) || 0;
+
+  // KPIs cũ (Host related)
   const totalHosts    = new Set(data.map(d => d.hostId)).size;
-  const superhostPct  = Math.round(data.filter(d => d.isSuperhost).length / data.length * 100);
+  const superhostPct  = totalListings > 0 ? Math.round(data.filter(d => d.isSuperhost).length / totalListings * 100) : 0;
   
   const responseData  = data.filter(d => d.responseTime && d.responseTime !== 'N/A');
   const fastResponse  = responseData.filter(d => d.responseTime.toLowerCase().includes('within an hour')).length;
   const responseRate  = responseData.length > 0 ? Math.round(fastResponse / responseData.length * 100) : 0;
 
-  // Formatting dữ liệu kpi.json
-  const totalListings = d3.format(",")(kpiData.total_listings);
-  const totalEstRev   = "$" + d3.format(",.1f")(kpiData.total_est_rev / 1e6) + "M";
+  // Formatting
+  const fmtListings = d3.format(",")(totalListings);
+  const fmtRev      = totalEstRev > 1e6 
+                      ? "$" + d3.format(",.1f")(totalEstRev / 1e6) + "M"
+                      : "$" + d3.format(",.0f")(totalEstRev / 1e3) + "K";
+  const fmtPrice    = "$" + d3.format(",.0f")(avgPrice);
 
   // Cập nhật giao diện
   kpiContainer.innerHTML = `
-    <!-- KPIs mới -->
     <div class="kpi-item kpi-item--primary">
-      <span class="kpi-value">${totalListings}</span>
+      <span class="kpi-value">${fmtListings}</span>
       <span class="kpi-label">Tổng Listing</span>
     </div>
     <div class="kpi-item kpi-item--primary">
-      <span class="kpi-value">${totalEstRev}</span>
+      <span class="kpi-value">${fmtRev}</span>
       <span class="kpi-label">Tổng Est Rev</span>
     </div>
+    <div class="kpi-item kpi-item--primary">
+      <span class="kpi-value">${fmtPrice}</span>
+      <span class="kpi-label">Giá trung bình</span>
+    </div>
     
-    <!-- Circular progress cho Occupancy Rate -->
     <div class="kpi-item kpi-item--circular" id="occupancy-kpi">
       <div class="circular-chart-wrapper"></div>
       <span class="kpi-label">Tỉ lệ lấp đầy</span>
@@ -137,19 +148,22 @@ function renderKPIs(data, kpiData) {
 
     <div class="kpi-divider"></div>
 
-    <!-- KPIs cũ -->
+    <div class="kpi-item">
+      <span class="kpi-value">${totalHosts}</span>
+      <span class="kpi-label">Chủ nhà</span>
+    </div>
     <div class="kpi-item">
       <span class="kpi-value">${superhostPct}%</span>
       <span class="kpi-label">Superhost</span>
     </div>
     <div class="kpi-item">
       <span class="kpi-value">${responseRate}%</span>
-      <span class="kpi-label">Phản hồi nhanh</span>
+      <span class="kpi-label">Phản hồi <1h</span>
     </div>
   `;
 
-  // Vẽ hình tròn D3 cho Occupancy Rate
-  drawOccupancyCircle(kpiData.occupancy_rate, '#occupancy-kpi .circular-chart-wrapper');
+  // Render circular chart cho Occupancy
+  drawOccupancyCircle(avgOccupancy / 100, '#occupancy-kpi .circular-chart-wrapper');
 }
 
 /**
@@ -157,6 +171,7 @@ function renderKPIs(data, kpiData) {
  */
 function drawOccupancyCircle(rate, selector) {
   const container = d3.select(selector);
+  container.selectAll("*").remove(); // Xóa cũ trước khi vẽ mới
   const width = 60;
   const height = 60;
   const strokeWidth = 6;

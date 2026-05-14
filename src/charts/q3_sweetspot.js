@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { store } from '../store.js';
 
 export function drawQ3Sweetspot(data, containerId) {
     const width = 960;
@@ -19,11 +20,11 @@ export function drawQ3Sweetspot(data, containerId) {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Title & Subtitle
-    svg.append("text")
-      .attr("class", "title")
-      .attr("x", margin.left)
-      .attr("y", 15)
-      .text("Sweet Spot Map — Price vs Occupancy by Room Type & Size");
+    // svg.append("text")
+    //   .attr("class", "title")
+    //   .attr("x", margin.left)
+    //   .attr("y", 15)
+    //   .text("Sweet Spot Map — Price vs Occupancy by Room Type & Size");
 
     // svg.append("text")
     //   .attr("class", "subtitle")
@@ -146,8 +147,21 @@ export function drawQ3Sweetspot(data, containerId) {
         .style("text-anchor", "start")
         .text("Cold zone ❄");
 
-      // State
-      let activeRoomType = null;
+      // State - now synchronized with global store
+      function updateVisuals(filters) {
+        const activeRoomType = filters.roomType;
+        if (!activeRoomType) {
+          d3.selectAll(".bubble").transition().duration(300).attr("opacity", 0.75);
+        } else {
+          d3.selectAll(".bubble").transition().duration(300)
+            .attr("opacity", b => b.room_type === activeRoomType ? 0.75 : 0.1);
+        }
+      }
+
+      // Listen for global store changes
+      store.subscribe((_, filters) => {
+        updateVisuals(filters);
+      });
 
       // Bubbles
       const bubbles = g.selectAll(".bubble")
@@ -175,7 +189,7 @@ export function drawQ3Sweetspot(data, containerId) {
               <span>Listings: ${d.listing_count}</span>
             `);
 
-          if (!activeRoomType) {
+          if (!store.filters.roomType) {
             d3.selectAll(".bubble").attr("opacity", 0.3);
             d3.select(this).attr("opacity", 1.0);
           }
@@ -186,20 +200,11 @@ export function drawQ3Sweetspot(data, containerId) {
         })
         .on("mouseout", function() {
           tooltip.style("visibility", "hidden");
-          if (!activeRoomType) {
-            d3.selectAll(".bubble").attr("opacity", 0.75);
-          } else {
-            d3.selectAll(".bubble").attr("opacity", d => d.room_type === activeRoomType ? 0.75 : 0.15);
-          }
+          updateVisuals(store.filters);
         })
         .on("click", function(event, d) {
-          if (activeRoomType === d.room_type) {
-            activeRoomType = null;
-            d3.selectAll(".bubble").attr("opacity", 0.75);
-          } else {
-            activeRoomType = d.room_type;
-            d3.selectAll(".bubble").attr("opacity", b => b.room_type === activeRoomType ? 0.75 : 0.15);
-          }
+          event.stopPropagation();
+          store.setFilter('roomType', d.room_type);
         });
 
       // LEGEND BELOW CHART
@@ -221,14 +226,9 @@ export function drawQ3Sweetspot(data, containerId) {
         const item = legend.append("g")
           .attr("class", "legend-item")
           .attr("transform", `translate(${columns[0]}, ${roomTypeY})`)
-          .on("click", () => {
-            if (activeRoomType === rt) {
-              activeRoomType = null;
-              d3.selectAll(".bubble").attr("opacity", 0.75);
-            } else {
-              activeRoomType = rt;
-              d3.selectAll(".bubble").attr("opacity", b => b.room_type === activeRoomType ? 0.75 : 0.15);
-            }
+          .on("click", (event) => {
+            event.stopPropagation();
+            store.setFilter('roomType', rt);
           });
 
         item.append("circle")

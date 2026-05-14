@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { store } from '../store.js';
 
 export function drawQ5Scatter(data, containerId) {
   const container = document.getElementById(containerId);
@@ -201,6 +202,14 @@ export function drawQ5Scatter(data, containerId) {
   if (roomFilter) roomFilter.addEventListener('change', updateFilters);
   if (neighFilter) neighFilter.addEventListener('change', updateFilters);
   if (priceFilter) priceFilter.addEventListener('change', updateFilters);
+
+  // Sync with global store
+  store.subscribe((_, filters) => {
+    if (roomFilter) {
+      roomFilter.value = filters.roomType || "All";
+      updateFilters();
+    }
+  });
 
   // LEGEND HTML
   const legendContainer = d3.select(container).append("div")

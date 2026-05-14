@@ -1,8 +1,7 @@
 class Store {
   constructor() {
-    this.globalData = [];       // listings_cleaned.csv data
-    this.q2Data = [];           // monthly aggregated data (not easily filterable by neighbourhood if already aggregated by borough, wait, Q2 is aggregated by borough)
-    this.filters = { neighbourhood: null };
+    this.globalData = [];
+    this.filters = { neighbourhood: null, roomType: null };
     this.listeners = [];
   }
 
@@ -30,8 +29,10 @@ class Store {
   getFilteredData() {
     let data = this.globalData;
     if (this.filters.neighbourhood) {
-      // If filtering by neighbourhood (like "Midtown")
       data = data.filter(d => d.neighbourhood === this.filters.neighbourhood);
+    }
+    if (this.filters.roomType) {
+      data = data.filter(d => d.roomType === this.filters.roomType);
     }
     return data;
   }
@@ -47,8 +48,7 @@ class Store {
 
   notify() {
     const newData = this.getFilteredData();
-    const newQ2Data = this.getFilteredQ2Data();
-    this.listeners.forEach(callback => callback(newData, newQ2Data));
+    this.listeners.forEach(callback => callback(newData, this.filters));
   }
 }
 
