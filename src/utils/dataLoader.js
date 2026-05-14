@@ -42,7 +42,7 @@ export async function loadListingsData() {
       rating:         isNaN(rating) ? null : rating,
       price:          isNaN(price)  ? null : price,
       // Kiểm tra superhost (xử lý nhiều định dạng text khác nhau)
-      isSuperhost:    ['TRUE', 'true', 't', '1'].includes(String(d.host_is_superhost).trim()),
+      isSuperhost:    ['true', 't', '1'].includes(String(d.host_is_superhost).trim().toLowerCase()),
       listingsCount:  isNaN(listings) ? 1 : listings,
       // Phân loại chủ nhà
       hostType:       listings <= 1 ? 'Single-host' : 'Multi-host',
@@ -50,6 +50,7 @@ export async function loadListingsData() {
       hasAvailability: d.has_availability?.trim() === 't',
       hostId:         d.host_id,
       hostSinceYear:  year,
+      availability365: parseFloat(d.availability_365) || 0,
     };
   });
 

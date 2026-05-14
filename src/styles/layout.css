@@ -84,8 +84,7 @@
   margin: 0 auto;
   padding: 2rem 2.5rem;
   display: grid;
-  /* Mặc định 2 cột cho màn hình lớn */
-  grid-template-columns: repeat(2, 1fr); 
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 1.5rem;
   width: 100%;
 }
@@ -109,6 +108,10 @@
 /* Điều phối kích thước card */
 .card--full  { grid-column: 1 / -1; }
 .card--half  { grid-column: span 1; }
+.card--span-3 { grid-column: span 3; }
+.card--span-4 { grid-column: span 4; }
+.card--span-5 { grid-column: span 5; }
+.card--span-6 { grid-column: span 6; }
 
 .card-header { margin-bottom: 1.25rem; }
 
@@ -181,6 +184,12 @@
   .card--half {
     grid-column: 1 / -1;
   }
+  .card--span-3,
+  .card--span-4,
+  .card--span-5,
+  .card--span-6 {
+    grid-column: 1 / -1;
+  }
 
   .header-inner {
     flex-direction: column;
@@ -197,4 +206,55 @@
   .dash-header { padding: 1.5rem; }
   .dashboard { padding: 1rem; }
   .dash-header h1 { font-size: 1.5rem; }
+}
+/* Custom KPI styles cho Dashboard */
+.kpi-item--primary .kpi-value {
+  background: linear-gradient(135deg, #2c3e50, #4ca1af);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  font-size: 2rem;
+}
+
+.kpi-item--circular {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.circular-chart-wrapper {
+  margin-bottom: 5px;
+}
+
+.kpi-divider {
+  width: 1px;
+  background-color: var(--border);
+  margin: 0 1rem;
+}
+
+/* ── Legends ─────────────────────────────────────────────────── */
+.legend-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.legend-rect {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-primary);
 }
