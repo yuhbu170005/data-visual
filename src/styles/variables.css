@@ -5,31 +5,31 @@
 
 :root {
   /* --- 1. Backgrounds & Surfaces --- */
-  --bg-page:        #0f1117;   /* Page background (Dùng chung) */
+  --bg-page:        #f4f6f8;   /* Page background (Dùng chung) */
   --color-bg:       var(--bg-page);
   
-  --bg-card:        #181c27;   /* Card background */
+  --bg-card:        #ffffff;   /* Card background */
   --color-surface:  var(--bg-card);
   
-  --bg-card-2:      #1e2333;   /* Tooltip / Inner card background */
+  --bg-card-2:      #f9fafb;   /* Tooltip / Inner card background */
   
   /* --- 2. Borders & Interactive --- */
-  --border:         rgba(255, 255, 255, 0.07);
+  --border:         rgba(0, 0, 0, 0.1);
   --color-border:   var(--border);
-  --border-hover:   rgba(255, 255, 255, 0.14);
+  --border-hover:   rgba(0, 0, 0, 0.2);
   
   /* --- 3. Typography & Text Colors --- */
   --font-sans:      'DM Sans', 'Segoe UI', system-ui, sans-serif;
   --font-family:    var(--font-sans);
   --font-mono:      'DM Mono', monospace;
 
-  --text-primary:   #f0f2f8;   /* Primary text color */
+  --text-primary:   #1a1f36;   /* Primary text color */
   --color-text:     var(--text-primary);
   
-  --text-secondary: #8b90a8;   /* Secondary text */
+  --text-secondary: #4f566b;   /* Secondary text */
   --color-text-muted: var(--text-secondary);
   
-  --text-muted:     #555a72;   /* Extremely muted text */
+  --text-muted:     #8792a2;   /* Extremely muted text */
 
   --font-size-base: 16px;
   --font-size-sm:   0.875rem;
