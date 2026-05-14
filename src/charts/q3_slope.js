@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { store } from '../store.js';
 
 export function drawQ3Slope(data, containerId) {
     const width = 760;
@@ -20,12 +21,12 @@ export function drawQ3Slope(data, containerId) {
       .style("height", "auto");
 
 
-    // Title & Subtitle
-    svg.append("text")
-      .attr("class", "title")
-      .attr("x", margin.left)
-      .attr("y", 25)
-      .text("Does Size Pay Off? Revenue & Occupancy by Room Size");
+    // // Title & Subtitle
+    // svg.append("text")
+    //   .attr("class", "title")
+    //   .attr("x", margin.left)
+    //   .attr("y", 25)
+    //   .text("Does Size Pay Off? Revenue & Occupancy by Room Size");
 
     // svg.append("text")
     //   .attr("class", "subtitle")
@@ -108,7 +109,7 @@ export function drawQ3Slope(data, containerId) {
 
       svg.append("text")
         .attr("class", "separator-text")
-        .attr("x", margin.left + plotWidth / 2)
+        .attr("x", margin.left + 40)
         .attr("y", sepY - 5)
         .text("Does higher occupancy explain the revenue trend?");
 
@@ -123,7 +124,10 @@ export function drawQ3Slope(data, containerId) {
         .x(d => xScale(d.size_segment))
         .y(d => yOccScale(d.avg_occupancy));
 
-      let activeRoomType = null;
+      // Subscribe to global store for roomType filtering/highlighting
+      store.subscribe((_, filters) => {
+        updateHighlight(filters.roomType);
+      });
 
       function updateHighlight(roomType) {
         if (!roomType) {
@@ -133,16 +137,19 @@ export function drawQ3Slope(data, containerId) {
           d3.selectAll(".slope-label").style("opacity", 1);
         } else {
           d3.selectAll(".data-line")
-            .style("opacity", function() { return d3.select(this).attr("data-type") === roomType ? 1 : 0.15; })
-            .style("stroke-width", function() { return d3.select(this).attr("data-type") === roomType ? "4px" : "2.5px"; });
+            .style("opacity", function() { return this.getAttribute("data-type") === roomType ? 1 : 0.15; })
+            .style("stroke-width", function() { return this.getAttribute("data-type") === roomType ? "4px" : "2.5px"; });
           
           d3.selectAll(".data-dot")
-            .style("opacity", function() { return d3.select(this).attr("data-type") === roomType ? 1 : 0.15; });
+            .style("opacity", function() { return this.getAttribute("data-type") === roomType ? 1 : 0.15; });
             
           d3.selectAll(".val-label, .slope-label")
-            .style("opacity", function() { return d3.select(this).attr("data-type") === roomType ? 1 : 0.15; });
+            .style("opacity", function() { return this.getAttribute("data-type") === roomType ? 1 : 0.15; });
         }
       }
+
+      // Initialize with current filter if any
+      updateHighlight(store.filters.roomType);
 
       Array.from(grouped).forEach(([roomType, values]) => {
         // Sort values based on sizes
@@ -158,8 +165,8 @@ export function drawQ3Slope(data, containerId) {
           .attr("d", lineRev)
           .attr("stroke", color)
           .attr("stroke-width", 2.5)
-          .on("mouseover", () => { if (!activeRoomType) updateHighlight(roomType); })
-          .on("mouseout", () => { if (!activeRoomType) updateHighlight(null); });
+          .on("mouseover", function() { if (!store.filters.roomType) updateHighlight(roomType); })
+          .on("mouseout", function() { if (!store.filters.roomType) updateHighlight(null); });
 
         values.forEach(d => {
           topG.append("circle")
@@ -172,7 +179,7 @@ export function drawQ3Slope(data, containerId) {
             .attr("stroke", "white")
             .attr("stroke-width", 2)
             .on("mouseover", function(event) {
-              if (!activeRoomType) updateHighlight(roomType);
+              if (!store.filters.roomType) updateHighlight(roomType);
               tooltip.style("visibility", "visible")
                 .html(`
                   <b>${d.room_type}</b>
@@ -189,7 +196,7 @@ export function drawQ3Slope(data, containerId) {
             })
             .on("mouseout", function() {
               tooltip.style("visibility", "hidden");
-              if (!activeRoomType) updateHighlight(null);
+              if (!store.filters.roomType) updateHighlight(null);
             });
 
           topG.append("text")
@@ -223,8 +230,8 @@ export function drawQ3Slope(data, containerId) {
           .attr("d", lineOcc)
           .attr("stroke", color)
           .attr("stroke-width", 2.5)
-          .on("mouseover", () => { if (!activeRoomType) updateHighlight(roomType); })
-          .on("mouseout", () => { if (!activeRoomType) updateHighlight(null); });
+          .on("mouseover", function() { if (!store.filters.roomType) updateHighlight(roomType); })
+          .on("mouseout", function() { if (!store.filters.roomType) updateHighlight(null); });
 
         values.forEach(d => {
           bottomG.append("circle")
@@ -237,7 +244,7 @@ export function drawQ3Slope(data, containerId) {
             .attr("stroke", "white")
             .attr("stroke-width", 2)
             .on("mouseover", function(event) {
-              if (!activeRoomType) updateHighlight(roomType);
+              if (!store.filters.roomType) updateHighlight(roomType);
               tooltip.style("visibility", "visible")
                 .html(`
                   <b>${d.room_type}</b>
@@ -254,7 +261,7 @@ export function drawQ3Slope(data, containerId) {
             })
             .on("mouseout", function() {
               tooltip.style("visibility", "hidden");
-              if (!activeRoomType) updateHighlight(null);
+              if (!store.filters.roomType) updateHighlight(null);
             });
 
           bottomG.append("text")
@@ -300,14 +307,9 @@ export function drawQ3Slope(data, containerId) {
         const item = legend.append("g")
           .attr("class", "legend-item")
           .attr("transform", `translate(${legendX}, ${legendY})`)
-          .on("click", () => {
-            if (activeRoomType === rt) {
-              activeRoomType = null;
-              updateHighlight(null);
-            } else {
-              activeRoomType = rt;
-              updateHighlight(rt);
-            }
+          .on("click", (event) => {
+            event.stopPropagation();
+            store.setFilter('roomType', rt);
           });
 
         item.append("line")

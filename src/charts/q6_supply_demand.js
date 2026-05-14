@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { store } from '../store.js';
 
 export function drawQ6SupplyDemand(data, containerId) {
   const container = document.getElementById(containerId);
@@ -292,4 +293,12 @@ export function drawQ6SupplyDemand(data, containerId) {
   const availItem = bgLegend.append("div").attr("class", "legend-item");
   availItem.append("span").attr("class", "legend-rect").style("background", "#e9ecef").style("border", "1px solid #ccc");
   availItem.append("span").text("Unused Availability");
+
+  // Sync with global store
+  store.subscribe((_, filters) => {
+    if (roomFilter && roomFilter.value !== (filters.roomType || "All")) {
+      roomFilter.value = filters.roomType || "All";
+      drawQ6SupplyDemand(data, containerId); // Redraw for simplicity in this complex chart
+    }
+  });
 }

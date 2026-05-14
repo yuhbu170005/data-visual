@@ -50,6 +50,7 @@ export async function loadListingsData() {
       hasAvailability: d.has_availability?.trim() === 't',
       hostId:         d.host_id,
       hostSinceYear:  year,
+      availability365: parseFloat(d.availability_365) || 0,
     };
   });
 

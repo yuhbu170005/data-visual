@@ -19,17 +19,17 @@ export function drawQ2Monthly(data, containerId) {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Title & Subtitle
-    svg.append("text")
-      .attr("class", "title")
-      .attr("x", margin.left)
-      .attr("y", 25)
-      .text("Monthly Est. Revenue by Borough");
+    // svg.append("text")
+    //   .attr("class", "title")
+    //   .attr("x", margin.left)
+    //   .attr("y", 25)
+    //   .text("Monthly Est. Revenue by Borough");
 
-    svg.append("text")
-      .attr("class", "subtitle")
-      .attr("x", margin.left)
-      .attr("y", 45)
-      .text("Calendar period: Nov 2025 – Nov 2026 · Booked days × nightly price");
+    // svg.append("text")
+    //   .attr("class", "subtitle")
+    //   .attr("x", margin.left)
+    //   .attr("y", 45)
+    //   .text("Calendar period: Nov 2025 – Nov 2026 · Booked days × nightly price");
 
     // Tooltip
     const tooltip = d3.select("body").append("div")
