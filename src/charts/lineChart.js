@@ -7,6 +7,11 @@ export function drawLineChart(data, containerId) {
   const container = document.getElementById(containerId)
   if (!container) return
 
+  // Force white background
+  container.style.backgroundColor = '#ffffff'
+  container.style.color = '#333'
+  container.style.borderRadius = '8px'
+
   const filtered = data.filter(d =>
     d.hostSinceYear !== null &&
     d.price !== null &&
@@ -119,6 +124,7 @@ export function drawLineChart(data, containerId) {
   // Legend
   const legendEl = document.createElement('div')
   legendEl.className = 'legend'
+  legendEl.style.color = '#333'
   Object.entries(COLORS).forEach(([key, color]) => {
     const label = key === 'true' ? 'Superhost' : 'Non-superhost'
     legendEl.innerHTML += `<div class="legend-item"><span class="legend-dot" style="background:${color}"></span>${label}</div>`
