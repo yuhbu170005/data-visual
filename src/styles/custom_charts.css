@@ -1,0 +1,111 @@
+/* CSS custom từ Q2, Q3 */
+.tooltip-header {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #555;
+  padding-bottom: 4px;
+}
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+}
+.tooltip-total {
+  margin-top: 4px;
+  border-top: 1px solid #555;
+  padding-top: 4px;
+  font-weight: bold;
+}
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.grid-line line {
+  stroke: #e0e0e0;
+  stroke-dasharray: 3, 3;
+}
+.grid-line path {
+  display: none;
+}
+.axis-label {
+  font-size: 12px;
+  fill: #333;
+}
+.title {
+  font-size: 15px;
+  font-weight: 600;
+  fill: #222;
+}
+.subtitle {
+  font-size: 12px;
+  fill: #666;
+}
+.bar-segment {
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+.legend-title {
+  font-size: 12px;
+  font-weight: 600;
+  fill: #333;
+}
+.legend-text {
+  font-size: 11px;
+  fill: #555;
+}
+.legend-item {
+  cursor: pointer;
+}
+.peak-annotation {
+  font-size: 11px;
+  fill: #555;
+  font-style: italic;
+  text-anchor: middle;
+}
+.peak-arrow {
+  font-size: 12px;
+  fill: #555;
+  text-anchor: middle;
+}
+.quadrant-line {
+  stroke: #aaa;
+  stroke-dasharray: 4 4;
+}
+.quadrant-bg {
+  opacity: 0.1;
+}
+.quadrant-bg.overpriced { fill: #e15759; }
+.quadrant-bg.value { fill: #2ca02c; }
+.quadrant-bg.premium { fill: #4E79A7; }
+.quadrant-bg.budget { fill: #F28E2B; }
+.quadrant-label {
+  font-size: 12px;
+  font-weight: bold;
+  fill: #666;
+  text-transform: uppercase;
+}
+.data-bubble {
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+.slope-label {
+  font-size: 11px;
+  font-weight: bold;
+}
+.slope-up { fill: #2ca02c; }
+.slope-down { fill: #e15759; }
+.val-label {
+  font-size: 11px;
+  fill: #333;
+  text-anchor: middle;
+}
+.data-line {
+  fill: none;
+  transition: opacity 0.2s;
+}
+.data-dot {
+  transition: opacity 0.2s;
+}
