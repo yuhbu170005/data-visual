@@ -18,7 +18,7 @@ export function drawLollipop(data, containerId) {
   container.style.borderRadius = '8px'
 
   const grouped = d3.rollup(
-    data.filter(d => d.rating !== null && d.neighbourhood && d.roomType),
+    data.filter(d => d.rating !== null && d.rating > 1.0 && d.neighbourhood && d.roomType),
     v => d3.mean(v, d => d.rating),
     d => d.neighbourhood,
     d => d.roomType
@@ -33,13 +33,13 @@ export function drawLollipop(data, containerId) {
 
   // ✅ Bước 1: Tính toán tổng số lượng và điểm trung bình chung cho mỗi neighbourhood
   const countByNeigh = d3.rollup(
-    data.filter(d => d.rating !== null && d.neighbourhood),
+    data.filter(d => d.rating !== null && d.rating > 1.0 && d.neighbourhood),
     v => v.length,
     d => d.neighbourhood
   )
 
   const overallAvgByNeigh = d3.rollup(
-    data.filter(d => d.rating !== null && d.neighbourhood),
+    data.filter(d => d.rating !== null && d.rating > 1.0 && d.neighbourhood),
     v => d3.mean(v, d => d.rating),
     d => d.neighbourhood
   )
@@ -53,8 +53,8 @@ export function drawLollipop(data, containerId) {
   // Lấy top 20
   const top20 = neighbourhoods.slice(0, 20)
 
-  // Filter rows sau khi có top20
-  const filteredRows = rows.filter(d => top20.includes(d.neighbourhood))
+  // Filter rows sau khi có top20 và loại bỏ các outlier (d.avg < 4.0) để đảm bảo không vẽ ra ngoài trục X mới
+  const filteredRows = rows.filter(d => top20.includes(d.neighbourhood) && d.avg >= 4.0)
 
   const margin = { top: 20, right: 30, bottom: 40, left: 180 }
   const rowHeight = 22
@@ -71,8 +71,8 @@ export function drawLollipop(data, containerId) {
   const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
 
   // ✅ X scale dùng filteredRows
-  const xMin = 0.0 // Bắt đầu từ 0.0 theo yêu cầu
-  const xMax = 5.05
+  const xMin = 4.0 // Bắt đầu từ 4.0 theo yêu cầu
+  const xMax = 5.0
   const x = d3.scaleLinear().domain([xMin, xMax]).range([0, innerW]).nice()
 
   const y = d3.scaleBand().domain(top20).range([0, innerH]).padding(0.3)
