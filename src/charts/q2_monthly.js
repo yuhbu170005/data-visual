@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
 
 export function drawQ2Monthly(data, containerId) {
-    const width = 900;
-    const height = 520;
-    const margin = { top: 60, right: 180, bottom: 80, left: 80 };
+    const width = 960;
+    const height = 620;
+    const margin = { top: 60, right: 40, bottom: 150, left: 80 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -199,23 +199,20 @@ export function drawQ2Monthly(data, containerId) {
         .text("↓");
 
       // Legend
-      const legendX = width - margin.right + 20;
-      let legendY = margin.top + 20;
-
-      const legend = svg.append("g");
+      const legend = svg.append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top + innerHeight + 80})`);
 
       legend.append("text")
         .attr("class", "legend-title")
-        .attr("x", legendX)
-        .attr("y", legendY)
+        .attr("x", 0)
+        .attr("y", 0)
         .text("Borough");
-      
-      legendY += 20;
 
-      legendOrder.forEach(borough => {
+      const legendStep = innerWidth / legendOrder.length;
+      legendOrder.forEach((borough, index) => {
         const item = legend.append("g")
           .attr("class", "legend-item")
-          .attr("transform", `translate(${legendX}, ${legendY})`)
+          .attr("transform", `translate(${index * legendStep}, 18)`)
           .on("click", () => {
             if (activeBorough === borough) {
               activeBorough = null;
@@ -235,8 +232,6 @@ export function drawQ2Monthly(data, containerId) {
           .attr("x", 18)
           .attr("y", 10)
           .text(borough);
-
-        legendY += 24;
       });
 
     

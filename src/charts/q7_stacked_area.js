@@ -7,8 +7,8 @@ export function drawQ7StackedArea(data, containerId) {
   d3.select(container).selectAll('*').remove();
 
   const width = container.clientWidth || 1200;
-  const height = 500;
-  const margin = { top: 40, right: 120, bottom: 60, left: 70 };
+  const height = 560;
+  const margin = { top: 40, right: 40, bottom: 120, left: 70 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -255,18 +255,26 @@ export function drawQ7StackedArea(data, containerId) {
       g.selectAll('.point-group circle').attr('opacity', 0);
     });
 
-  // Add legend
-  const legendX = innerWidth + 20;
+  // Add legend below chart
   const legend = g.append('g')
     .attr('class', 'legend')
-    .attr('transform', `translate(${legendX}, 0)`);
+    .attr('transform', `translate(0, ${innerHeight + 80})`);
 
+  legend.append('text')
+    .attr('x', 0)
+    .attr('y', -12)
+    .attr('font-size', '12px')
+    .attr('font-weight', '600')
+    .attr('fill', '#333')
+    .text('Top 5 Listings');
+
+  const legendStep = innerWidth / listings.length;
   listings.forEach((lid, i) => {
-    const y_offset = i * 25;
+    const xOffset = i * legendStep;
 
     legend.append('rect')
-      .attr('x', 0)
-      .attr('y', y_offset)
+      .attr('x', xOffset)
+      .attr('y', 0)
       .attr('width', 12)
       .attr('height', 12)
       .attr('fill', color(lid))
@@ -274,19 +282,10 @@ export function drawQ7StackedArea(data, containerId) {
       .attr('rx', 2);
 
     legend.append('text')
-      .attr('x', 18)
-      .attr('y', y_offset + 10)
+      .attr('x', xOffset + 18)
+      .attr('y', 10)
       .attr('font-size', '11px')
       .attr('fill', '#333')
       .text(`ID ${lid.slice(-8)}`);
   });
-
-  // Add legend title
-  legend.append('text')
-    .attr('x', 0)
-    .attr('y', -15)
-    .attr('font-size', '12px')
-    .attr('font-weight', '600')
-    .attr('fill', '#333')
-    .text('Top 5 Listings');
 }
