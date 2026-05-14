@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
 
 export function drawQ3Sweetspot(data, containerId) {
-    const width = 800;
-    const height = 520;
-    const margin = { top: 40, right: 180, bottom: 70, left: 70 };
+    const width = 960;
+    const height = 620;
+    const margin = { top: 60, right: 40, bottom: 150, left: 80 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -202,24 +202,25 @@ export function drawQ3Sweetspot(data, containerId) {
           }
         });
 
-      // LEGEND
-      const legendX = width - margin.right + 20;
-      let legendY = margin.top;
+      // LEGEND BELOW CHART
+      const legend = svg.append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top + innerHeight + 80})`);
 
-      const legend = svg.append("g");
+      const columns = [0, innerWidth / 3, (innerWidth / 3) * 2];
 
       // Legend 1: Room Type
+      let roomTypeY = 0;
       legend.append("text")
         .attr("class", "legend-title")
-        .attr("x", legendX)
-        .attr("y", legendY)
+        .attr("x", columns[0])
+        .attr("y", roomTypeY)
         .text("Room type");
-      legendY += 20;
+      roomTypeY += 18;
 
       colorScale.domain().forEach(rt => {
         const item = legend.append("g")
           .attr("class", "legend-item")
-          .attr("transform", `translate(${legendX}, ${legendY})`)
+          .attr("transform", `translate(${columns[0]}, ${roomTypeY})`)
           .on("click", () => {
             if (activeRoomType === rt) {
               activeRoomType = null;
@@ -240,22 +241,21 @@ export function drawQ3Sweetspot(data, containerId) {
           .attr("y", 4)
           .text(rt);
 
-        legendY += 20;
+        roomTypeY += 20;
       });
 
-      legendY += 15;
-
       // Legend 2: Size Segment
+      let segmentY = 0;
       legend.append("text")
         .attr("class", "legend-title")
-        .attr("x", legendX)
-        .attr("y", legendY)
+        .attr("x", columns[1])
+        .attr("y", segmentY)
         .text("Accommodates");
-      legendY += 25;
+      segmentY += 18;
 
       shapeScale.domain().forEach(seg => {
         const item = legend.append("g")
-          .attr("transform", `translate(${legendX + 5}, ${legendY})`);
+          .attr("transform", `translate(${columns[1]}, ${segmentY})`);
 
         item.append("path")
           .attr("d", d3.symbol().type(shapeScale(seg)).size(50))
@@ -265,26 +265,25 @@ export function drawQ3Sweetspot(data, containerId) {
           .attr("class", "legend-text")
           .attr("x", 12)
           .attr("y", 4)
-          .text(seg.split(" ")[0]); // "Small", "Medium", "Large"
+          .text(seg.split(" ")[0]);
 
-        legendY += 20;
+        segmentY += 20;
       });
 
-      legendY += 15;
-
       // Legend 3: Bubble Size
+      let sizeY = 0;
       legend.append("text")
         .attr("class", "legend-title")
-        .attr("x", legendX)
-        .attr("y", legendY)
+        .attr("x", columns[2])
+        .attr("y", sizeY)
         .text("Est. monthly rev");
-      legendY += 30;
+      sizeY += 24;
 
       const sizeValues = [500, 1500, 3000];
       sizeValues.forEach(val => {
         const r = sizeScale(val);
         const item = legend.append("g")
-          .attr("transform", `translate(${legendX + 15}, ${legendY})`);
+          .attr("transform", `translate(${columns[2] + 10}, ${sizeY})`);
 
         item.append("circle")
           .attr("r", r)
@@ -297,7 +296,7 @@ export function drawQ3Sweetspot(data, containerId) {
           .attr("y", 4)
           .text("$" + d3.format(",")(val));
 
-        legendY += Math.max(r * 2 + 10, 25);
+        sizeY += Math.max(r * 2 + 10, 25);
       });
 
     
