@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
 import { createTooltip } from '../components/tooltip.js'
+import { store } from '../store.js'
 
 const ROOM_COLORS = {
   'Entire home/apt': '#4e79a7',
@@ -66,6 +67,16 @@ export function drawLollipop(data, containerId) {
     .attr('width', width)
     .attr('height', height)
 
+  // Nền ẩn (Background rect) để bắt sự kiện click ra ngoài -> Reset filter
+  svg.append('rect')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('fill', 'transparent')
+    .on('click', () => {
+      store.setFilter('neighbourhood', null);
+      svg.selectAll('.mark-group').transition().duration(300).attr('opacity', 1);
+    });
+
   const innerW = width - margin.left - margin.right
   const innerH = height - margin.top - margin.bottom
   const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
@@ -119,41 +130,59 @@ export function drawLollipop(data, containerId) {
 
   const tip = createTooltip()
 
-  // Draw per neighbourhood
-  top20.forEach(neigh => {
-    const neighRows = filteredRows.filter(d => d.neighbourhood === neigh)
-    const cy = y(neigh) + y.bandwidth() / 2
+  const marks = g.selectAll('.mark-group')
+    .data(filteredRows)
+    .join('g')
+    .attr('class', 'mark-group')
 
-    neighRows.forEach(row => {
-      // Draw stem from xMin to the dot
-      g.append('line')
-        .attr('x1', x(xMin))
-        .attr('x2', x(row.avg))
-        .attr('y1', cy)
-        .attr('y2', cy)
-        .attr('stroke', ROOM_COLORS[row.roomType] || '#aaa')
-        .attr('stroke-width', 3)
-        .style('opacity', 0.6) // Opacity helps see overlapping stems
+  marks.append('line')
+    .attr('x1', x(xMin))
+    .attr('x2', d => x(d.avg))
+    .attr('y1', d => y(d.neighbourhood) + y.bandwidth() / 2)
+    .attr('y2', d => y(d.neighbourhood) + y.bandwidth() / 2)
+    .attr('stroke', d => ROOM_COLORS[d.roomType] || '#aaa')
+    .attr('stroke-width', 3)
+    .style('opacity', 0.6) // Opacity helps see overlapping stems
 
-      g.append('circle')
-        .attr('cx', x(row.avg))
-        .attr('cy', cy)
-        .attr('r', 6)
-        .attr('fill', ROOM_COLORS[row.roomType] || '#aaa')
-        .attr('stroke', 'transparent')
-        .attr('stroke-width', 0)
-        .style('cursor', 'pointer')
-        .on('mouseover', (event) => {
-          tip.show(`
-            <strong>${row.neighbourhood}</strong><br>
-            ${row.roomType}<br>
-            Rating: <strong>${row.avg.toFixed(2)}</strong>
-          `, event)
-        })
-        .on('mousemove', (event) => tip.move(event))
-        .on('mouseleave', () => tip.hide())
-    })
+  marks.append('circle')
+    .attr('cx', d => x(d.avg))
+    .attr('cy', d => y(d.neighbourhood) + y.bandwidth() / 2)
+    .attr('r', 6)
+    .attr('fill', d => ROOM_COLORS[d.roomType] || '#ccc')
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 1)
+
+  marks.on('mouseover', (event, d) => {
+    tip.show(`
+      <strong>${d.neighbourhood}</strong><br/>
+      Room Type: ${d.roomType}<br/>
+      Avg Rating: <strong>${d.avg.toFixed(2)}</strong>
+    `, event)
+    d3.select(event.currentTarget).select('circle').attr('stroke', '#333').attr('stroke-width', 2)
   })
+  .on('mousemove', (event) => tip.move(event))
+  .on('mouseleave', (event) => {
+    tip.hide()
+    d3.select(event.currentTarget).select('circle').attr('stroke', '#fff').attr('stroke-width', 1)
+  })
+  .on('click', function(event, d) {
+    event.stopPropagation(); // Chặn sự kiện click truyền xuống background rect
+
+    const isSelected = store.filters.neighbourhood === d.neighbourhood;
+    
+    // Cập nhật State
+    store.setFilter('neighbourhood', d.neighbourhood);
+
+    // Xử lý Hiệu ứng UI (Visual Feedback)
+    if (isSelected) {
+       // Deselect -> Tất cả sáng lại
+       svg.selectAll('.mark-group').transition().duration(300).attr('opacity', 1);
+    } else {
+       // Select mới -> Mờ các nhánh khác
+       svg.selectAll('.mark-group').transition().duration(300)
+          .attr('opacity', node => node.neighbourhood === d.neighbourhood ? 1 : 0.2);
+    }
+  });
 
   // Legend
   const legendEl = document.createElement('div')

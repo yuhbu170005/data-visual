@@ -6,13 +6,15 @@ import * as d3 from 'd3';
 import { loadListingsData, loadJSON } from './utils/dataLoader.js';
 import { drawLollipop }    from './charts/lollipopChart.js';
 import { drawLineChart }   from './charts/lineChart.js';
-import { drawStackedBar }  from './charts/stackedBar.js';
-import { drawResponseBar } from './charts/responseBar.js';
+import { initStackedBar }  from './charts/stackedBar.js';
+import { initResponseBar } from './charts/responseBar.js';
 import { drawQ2Monthly }   from './charts/q2_monthly.js';
 import { drawQ3Sweetspot } from './charts/q3_sweetspot.js';
 import { drawQ3Slope }     from './charts/q3_slope.js';
+import { drawQ5Scatter }   from './charts/q5_scatter.js';
 import { drawQ6SupplyDemand } from './charts/q6_supply_demand.js';
-import { drawQ7StackedArea } from './charts/q7_stacked_area.js';
+import { drawQ7ReviewsArea } from './charts/q7_reviews_area.js';
+import { store } from './store.js';
 
 /**
  * Khởi tạo Dashboard
@@ -40,24 +42,24 @@ export async function initDashboard() {
       return;
     }
 
-    // Xóa placeholder cũ nếu có trước khi vẽ
-    // dashboard.innerHTML = ''; 
+    // Initialize Store
+    store.setData(data);
 
     // 2. Nạp dữ liệu bổ sung & Tính toán KPI
     const kpiData = await loadJSON('/data/kpi.json');
     const q2Data = await loadJSON('/data/q2_monthly.json');
     const q3Data = await loadJSON('/data/q3_agg.json');
+    const q5ScatterData = await loadJSON('/data/q5_scatter.json');
     const q6Data = await loadJSON('/data/q6_supply_demand.json');
     const q7Data = await loadJSON('/data/q7_reviews_area.json');
-
-    renderKPIs(data, kpiData);
 
     // 3. Khởi tạo các biểu đồ mới
     drawQ2Monthly(q2Data, 'q2-monthly-svg');
     drawQ3Sweetspot(q3Data, 'q3-sweetspot-svg');
     drawQ3Slope(q3Data, 'q3-slope-svg');
+    if(q5ScatterData) drawQ5Scatter(q5ScatterData, 'q5-chart-svg');
     drawQ6SupplyDemand(q6Data, 'q6-chart-svg');
-    drawQ7StackedArea(q7Data, 'q7-chart-svg');
+    drawQ7ReviewsArea(q7Data, 'q7-chart-svg');
     
     // Add event listeners for Q6 filters
     const q6NeighFilter = document.getElementById('q6-filter-neigh');
@@ -67,12 +69,24 @@ export async function initDashboard() {
 
     // Q7 Stacked Area Chart - No filters needed
 
-    // 4. Khởi tạo các biểu đồ cũ
-    // Lưu ý: Các ID như #lollipop-svg đã được định nghĩa trong file index.html chúng ta đã merge
-    drawLollipop(data,    'lollipop-svg');
-    drawLineChart(data,   'line-svg');
-    drawStackedBar(data,  'stacked-svg');
-    drawResponseBar(data, 'response-svg');
+    // 4. Khởi tạo các biểu đồ cũ và áp dụng Cross-Filtering
+    drawLollipop(store.getFilteredData(), 'lollipop-svg');
+    drawLineChart(data, 'line-svg'); // Line chart is unaffected by neighbourhood currently
+
+    const stackedBar = initStackedBar('stacked-svg');
+    const responseBar = initResponseBar('response-svg');
+
+    // Đăng ký update chart vào store
+    store.subscribe((filteredData) => {
+      stackedBar.update(filteredData);
+      responseBar.update(filteredData);
+      renderKPIs(filteredData, kpiData);
+    });
+
+    // Initial render
+    stackedBar.update(store.getFilteredData());
+    responseBar.update(store.getFilteredData());
+    renderKPIs(store.getFilteredData(), kpiData);
 
   } catch (error) {
     console.error('Lỗi khi khởi tạo Dashboard:', error);
