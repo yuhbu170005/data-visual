@@ -1,10 +1,10 @@
 {
-  "name": "data-visual",
+  "name": "ny-hotel-host-dashboard",
   "version": "1.0.0",
-  "description": "New York hotel data visualization dashboard built with D3.js and Vite",
+  "description": "Interactive New York City Hotel & Airbnb Host Quality Dashboard built with D3.js and Vite",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --open",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -17,18 +17,21 @@
     "visualization",
     "dashboard",
     "vite",
-    "data"
+    "data",
+    "nyc",
+    "airbnb"
   ],
-  "author": "",
+  "author": "yuhbu170005",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/yuhbu170005/data-visual/issues"
   },
   "homepage": "https://github.com/yuhbu170005/data-visual#readme",
   "devDependencies": {
-    "vite": "^8.0.12"
+    "vite": "^5.4.0"
   },
   "dependencies": {
-    "d3": "^7.9.0"
+    "d3": "^7.9.0",
+    "papaparse": "^5.4.1"
   }
 }

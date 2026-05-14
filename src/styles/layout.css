@@ -1,112 +1,200 @@
 /**
- * layout.css — Page-level structural styles
- *
- * Defines the overall page layout: header, main dashboard grid,
- * chart cards, and footer. Responsive adjustments are included.
+ * layout.css — Hệ thống layout hợp nhất cho Dashboard
  */
 
 /* ── Application shell ───────────────────────────────────────── */
-
 #app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: var(--bg-body, #f8f9fa); /* Sử dụng biến hoặc màu mặc định */
 }
 
 /* ── Header ──────────────────────────────────────────────────── */
-
-.app-header {
-  padding: var(--space-8) var(--space-6);
-  border-bottom: 1px solid var(--color-border);
-  text-align: center;
+.dash-header {
+  padding: 2rem 2.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
 }
 
-.app-header h1 {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  letter-spacing: 0.02em;
-}
-
-.app-header .subtitle {
-  margin-top: var(--space-2);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-/* ── Dashboard grid ──────────────────────────────────────────── */
-
-.dashboard {
-  flex: 1;
-  display: grid;
-  /* Single column on mobile, up to 2 on tablets, 3 on desktop */
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: var(--space-6);
-  padding: var(--space-8) var(--space-6);
-  max-width: 1400px;
-  width: 100%;
+.header-inner {
+  max-width: 1600px;
   margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
-/* ── Chart card ──────────────────────────────────────────────── */
+.header-tag {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-3);
+  display: block;
+  margin-bottom: 6px;
+}
 
-.chart-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+.dash-header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.header-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── KPI bar ─────────────────────────────────────────────────── */
+.header-kpis {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.kpi-item {
+  text-align: right;
+}
+
+.kpi-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  display: block;
+}
+
+.kpi-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* ── Dashboard Grid ──────────────────────────────────────────── */
+.dashboard, .dash-grid {
+  flex: 1;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem;
+  display: grid;
+  /* Mặc định 2 cột cho màn hình lớn */
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* ── Chart Cards ─────────────────────────────────────────────── */
+.card, .chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 12px);
+  padding: 1.5rem;
   box-shadow: var(--shadow-card);
-  padding: var(--space-6);
+  transition: border-color 0.2s, transform 0.2s;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
 }
 
-.chart-card .chart-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
+.card:hover { 
+  border-color: var(--border-hover); 
 }
 
-.chart-card .chart-description {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+/* Điều phối kích thước card */
+.card--full  { grid-column: 1 / -1; }
+.card--half  { grid-column: span 1; }
+
+.card-header { margin-bottom: 1.25rem; }
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
 }
 
-/* ── Placeholder (shown before charts are added) ─────────────── */
+.card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
 
-.placeholder {
-  grid-column: 1 / -1;
+.chart-wrap {
+  width: 100%;
+  flex: 1;
+  min-height: 300px; /* Đảm bảo có không gian cho D3 vẽ */
+  overflow: visible;
+}
+
+/* ── D3 Elements (Axes, Legend, Tooltip) ────────────────────── */
+.tooltip {
+  position: fixed;
+  background: var(--bg-card-2, #fff);
+  border: 1px solid var(--border-hover);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  box-shadow: var(--shadow-lg);
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.tooltip.visible { opacity: 1; }
+
+.legend {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-  border: 2px dashed var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  text-align: center;
-  padding: var(--space-8);
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 1rem;
+}
+
+.axis text {
+  fill: var(--text-secondary);
+  font-size: 11px;
 }
 
 /* ── Footer ──────────────────────────────────────────────────── */
-
 .app-footer {
-  padding: var(--space-6);
-  border-top: 1px solid var(--color-border);
+  padding: 2rem;
+  border-top: 1px solid var(--border);
   text-align: center;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  font-size: 13px;
+  color: var(--text-muted);
+  background: var(--bg-card);
 }
 
-/* ── Responsive tweaks ───────────────────────────────────────── */
+/* ── Responsive adjustments ──────────────────────────────────── */
+@media (max-width: 1024px) {
+  .dashboard, .dash-grid {
+    grid-template-columns: 1fr; /* Chuyển về 1 cột trên tablet/mobile */
+    padding: 1.5rem;
+  }
+  
+  .card--half {
+    grid-column: 1 / -1;
+  }
+
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .kpi-item {
+    text-align: left;
+  }
+}
 
 @media (max-width: 640px) {
-  .app-header {
-    padding: var(--space-6) var(--space-4);
-  }
-
-  .dashboard {
-    padding: var(--space-4);
-    gap: var(--space-4);
-  }
+  .dash-header { padding: 1.5rem; }
+  .dashboard { padding: 1rem; }
+  .dash-header h1 { font-size: 1.5rem; }
 }

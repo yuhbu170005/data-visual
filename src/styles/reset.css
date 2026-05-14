@@ -1,10 +1,8 @@
 /**
- * reset.css — Browser default normalization
- *
- * A minimal, modern CSS reset that removes inconsistencies
- * across browsers without over-resetting useful defaults.
+ * reset.css — Hợp nhất và Chuẩn hóa trình duyệt
  */
 
+/* ── Quy tắc cơ bản ── */
 *,
 *::before,
 *::after {
@@ -14,27 +12,39 @@
 }
 
 html {
-  font-size: var(--font-size-base);
+  /* Ưu tiên biến số từ hệ thống theme của bạn */
+  font-size: var(--font-size-base, 16px);
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: var(--font-family);
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  /* Hợp nhất font-family và màu nền từ cả 2 file */
+  font-family: var(--font-sans, var(--font-family, sans-serif));
+  background-color: var(--bg-page, var(--color-bg, #f4f4f4));
+  color: var(--text-primary, var(--color-text, #333));
   line-height: 1.6;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Đồ họa & SVG (Quan trọng cho D3.js) ── */
 img,
 svg {
   display: block;
   max-width: 100%;
 }
 
+/* Đảm bảo text trong biểu đồ D3 sử dụng cùng font với hệ thống */
+svg text {
+  font-family: var(--font-sans, inherit);
+}
+
+/* ── Tương tác & Typography ── */
 a {
-  color: var(--color-accent);
+  color: var(--color-accent, #007bff);
   text-decoration: none;
+  transition: color 0.2s;
 }
 
 a:hover {
@@ -44,12 +54,19 @@ a:hover {
 button {
   cursor: pointer;
   font: inherit;
+  border: none;
+  background: none;
 }
 
 code {
-  font-family: 'Courier New', Courier, monospace;
-  background: var(--color-surface);
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
+  font-family: var(--font-mono, 'Courier New', Courier, monospace);
+  background: var(--bg-card-2, var(--color-surface, #eee));
+  padding: 0.2em 0.4em;
+  border-radius: var(--radius-sm, 4px);
+  font-size: 85%;
+}
+
+/* Khử răng cưa cho các thành phần UI mượt mà hơn */
+input, textarea, select {
+  font: inherit;
 }
