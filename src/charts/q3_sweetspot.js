@@ -41,17 +41,27 @@ export function drawQ3Sweetspot(data, containerId) {
       .domain(["Entire home/apt", "Private room", "Shared room", "Hotel room"])
       .range(["#4E79A7", "#F28E2B", "#76B7B2", "#E15759"]);
 
-    // Shapes
-    const shapeScale = d3.scaleOrdinal()
-      .domain(["Small (1–2)", "Medium (3–4)", "Large (5+)"])
-      .range([d3.symbolCircle, d3.symbolSquare, d3.symbolTriangle]);
+    // Aggregate Data by Room Type only
+    const aggregatedData = Array.from(d3.rollup(data,
+      v => {
+        const totalListings = d3.sum(v, d => d.listing_count);
+        return {
+          room_type: v[0].room_type,
+          avg_price: d3.sum(v, d => d.avg_price * d.listing_count) / totalListings,
+          avg_occupancy: d3.sum(v, d => d.avg_occupancy * d.listing_count) / totalListings,
+          avg_est_rev_monthly: d3.sum(v, d => d.avg_est_rev_monthly * d.listing_count) / totalListings,
+          listing_count: totalListings
+        };
+      },
+      d => d.room_type
+    ).values());
 
     // Load Data
     
       
       // Scales
       const xScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.avg_price) * 1.05])
+        .domain([0, d3.max(aggregatedData, d => d.avg_price) * 1.1])
         .range([0, innerWidth]);
 
       const yScale = d3.scaleLinear()
@@ -59,8 +69,8 @@ export function drawQ3Sweetspot(data, containerId) {
         .range([innerHeight, 0]);
 
       const sizeScale = d3.scaleSqrt()
-        .domain([0, d3.max(data, d => d.avg_est_rev_monthly)])
-        .range([8 * 8 * Math.PI, 40 * 40 * Math.PI]); 
+        .domain([0, d3.max(aggregatedData, d => d.avg_est_rev_monthly) || 5000])
+        .range([5, 40]); 
 
       // Axes
       const xAxis = d3.axisBottom(xScale)
@@ -171,23 +181,20 @@ export function drawQ3Sweetspot(data, containerId) {
 
       // Bubbles
       const bubbles = g.selectAll(".bubble")
-        .data(data)
+        .data(aggregatedData)
         .enter()
-        .append("path")
+        .append("circle")
         .attr("class", "bubble")
-        .attr("d", d3.symbol()
-          .type(d => shapeScale(d.size_segment))
-          .size(d => sizeScale(d.avg_est_rev_monthly))
-        )
-        .attr("transform", d => `translate(${xScale(d.avg_price)},${yScale(d.avg_occupancy)})`)
+        .attr("cx", d => xScale(d.avg_price))
+        .attr("cy", d => yScale(d.avg_occupancy))
+        .attr("r", d => sizeScale(d.avg_est_rev_monthly))
         .attr("fill", d => colorScale(d.room_type))
         .attr("stroke", "white")
-        .attr("stroke-width", 1.5)
+        .attr("stroke-width", 2)
         .attr("opacity", 0.75)
         .on("mouseover", function(event, d) {
           tip.show(event, `
             <div class="tooltip-header">${d.room_type}</div>
-            <div class="tooltip-row"><span>Size:</span> <strong>${d.size_segment}</strong></div>
             <div class="tooltip-row"><span>Avg price:</span> <strong>$${d3.format(".0f")(d.avg_price)}</strong></div>
             <div class="tooltip-row"><span>Occupancy:</span> <strong>${(d.avg_occupancy * 100).toFixed(1)}%</strong></div>
             <div class="tooltip-row"><span>Est. monthly rev:</span> <strong>$${d3.format(",.0f")(d.avg_est_rev_monthly)}</strong></div>
@@ -253,51 +260,22 @@ export function drawQ3Sweetspot(data, containerId) {
         roomTypeY += 20;
       });
 
-      // Legend 2: Size Segment
-      let segmentY = 0;
-      legend.append("text")
-        .attr("class", "legend-title")
-        .attr("x", columns[1])
-        .attr("y", segmentY)
-        .style("font-size", "15px")
-        .style("font-weight", "600")
-        .text("Accommodates");
-      segmentY += 18;
-
-      shapeScale.domain().forEach(seg => {
-        const item = legend.append("g")
-          .attr("transform", `translate(${columns[1]}, ${segmentY})`);
-
-        item.append("path")
-          .attr("d", d3.symbol().type(shapeScale(seg)).size(50))
-          .attr("fill", "#666");
-
-        item.append("text")
-          .attr("class", "legend-text")
-          .attr("x", 14)
-          .attr("y", 5)
-          .style("font-size", "14px")
-          .text(seg.split(" ")[0]);
-
-        segmentY += 20;
-      });
-
-      // Legend 3: Bubble Size
+      // Legend 2: Bubble Size
       let sizeY = 0;
       legend.append("text")
         .attr("class", "legend-title")
-        .attr("x", columns[2])
+        .attr("x", columns[1])
         .attr("y", sizeY)
         .style("font-size", "15px")
         .style("font-weight", "600")
         .text("Est. monthly rev");
       sizeY += 24;
 
-      const sizeValues = [500, 1500, 3000];
+      const sizeValues = [1000, 3000];
       sizeValues.forEach(val => {
         const r = sizeScale(val);
         const item = legend.append("g")
-          .attr("transform", `translate(${columns[2] + 10}, ${sizeY})`);
+          .attr("transform", `translate(${columns[1] + 10}, ${sizeY})`);
 
         item.append("circle")
           .attr("r", r)
@@ -306,12 +284,12 @@ export function drawQ3Sweetspot(data, containerId) {
 
         item.append("text")
           .attr("class", "legend-text")
-          .attr("x", 30)
+          .attr("x", 40)
           .attr("y", 5)
           .style("font-size", "14px")
           .text("$" + d3.format(",")(val));
 
-        sizeY += Math.max(r * 2 + 10, 25);
+        sizeY += Math.max(r * 2 + 10, 35);
       });
 
     
