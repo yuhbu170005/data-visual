@@ -5,7 +5,7 @@
 import * as d3 from 'd3';
 import { loadListingsData, loadJSON } from './utils/dataLoader.js';
 import { drawLollipop }    from './charts/lollipopChart.js';
-import { drawLineChart }   from './charts/lineChart.js';
+import { initLineChart }   from './charts/lineChart.js';
 import { initStackedBar }  from './charts/stackedBar.js';
 import { initResponseBar } from './charts/responseBar.js';
 import { drawQ2Monthly }   from './charts/q2_monthly.js';
@@ -71,7 +71,7 @@ export async function initDashboard() {
 
     // 4. Khởi tạo các biểu đồ cũ và áp dụng Cross-Filtering
     drawLollipop(store.getFilteredData(), 'lollipop-svg');
-    drawLineChart(data, 'line-svg'); // Line chart is unaffected by neighbourhood currently
+    const lineChart = initLineChart('line-svg');
 
     const stackedBar = initStackedBar('stacked-svg');
     const responseBar = initResponseBar('response-svg');
@@ -80,12 +80,14 @@ export async function initDashboard() {
     store.subscribe((filteredData) => {
       stackedBar.update(filteredData);
       responseBar.update(filteredData);
+      lineChart.update(filteredData);
       renderKPIs(filteredData, kpiData);
     });
 
     // Initial render
     stackedBar.update(store.getFilteredData());
     responseBar.update(store.getFilteredData());
+    lineChart.update(store.getFilteredData());
     renderKPIs(store.getFilteredData(), kpiData);
 
   } catch (error) {
