@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { createTooltip } from '../components/tooltip.js';
 import { store } from '../store.js';
 
 export function drawQ3Sweetspot(data, containerId) {
@@ -33,8 +34,7 @@ export function drawQ3Sweetspot(data, containerId) {
     //   .text("Bubble size = estimated monthly revenue | Shape = accommodates segment");
 
     // Tooltip
-    const tooltip = d3.select("body").append("div")
-      .attr("class", "tooltip");
+    const tip = createTooltip();
 
     // Colors
     const colorScale = d3.scaleOrdinal()
@@ -185,15 +185,16 @@ export function drawQ3Sweetspot(data, containerId) {
         .attr("stroke-width", 1.5)
         .attr("opacity", 0.75)
         .on("mouseover", function(event, d) {
-          tooltip.style("visibility", "visible")
-            .html(`
-              <b>${d.room_type}</b>
-              <span>Size: ${d.size_segment}</span>
-              <span>Avg price: $${d3.format(".0f")(d.avg_price)}</span>
-              <span>Occupancy: ${(d.avg_occupancy * 100).toFixed(1)}%</span>
-              <span>Est. monthly rev: $${d3.format(",.0f")(d.avg_est_rev_monthly)}</span>
-              <span>Listings: ${d.listing_count}</span>
-            `);
+          tip.show(event, `
+            <div class="tooltip-header">${d.room_type}</div>
+            <div class="tooltip-row"><span>Size:</span> <strong>${d.size_segment}</strong></div>
+            <div class="tooltip-row"><span>Avg price:</span> <strong>$${d3.format(".0f")(d.avg_price)}</strong></div>
+            <div class="tooltip-row"><span>Occupancy:</span> <strong>${(d.avg_occupancy * 100).toFixed(1)}%</strong></div>
+            <div class="tooltip-row"><span>Est. monthly rev:</span> <strong>$${d3.format(",.0f")(d.avg_est_rev_monthly)}</strong></div>
+            <div class="tooltip-row" style="border-top: 1px solid #eee; margin-top:5px; padding-top:5px;">
+              <span>Listings count:</span> <strong>${d.listing_count}</strong>
+            </div>
+          `);
 
           if (!store.filters.roomType) {
             d3.selectAll(".bubble").attr("opacity", 0.3);
@@ -201,11 +202,10 @@ export function drawQ3Sweetspot(data, containerId) {
           }
         })
         .on("mousemove", function(event) {
-          tooltip.style("top", (event.pageY - 10) + "px")
-            .style("left", (event.pageX + 15) + "px");
+          tip.move(event);
         })
         .on("mouseout", function() {
-          tooltip.style("visibility", "hidden");
+          tip.hide();
           updateVisuals(store.filters);
         })
         .on("click", function(event, d) {

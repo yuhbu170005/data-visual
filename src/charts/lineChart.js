@@ -114,11 +114,21 @@ export function drawLineChart(data, containerId) {
       .attr('fill', 'transparent')
       .attr('stroke', 'transparent')
       .style('cursor', 'pointer')
-      .on('mouseover', (event, d) => {
-        tip.show(`<strong>${label}</strong><br>Năm: ${d.year}<br>Giá TB: <strong>$${d.avg.toFixed(0)}</strong>`, event)
+      .on('mouseover', function(event, d) {
+        tip.show(event, `
+          <div class="tooltip-header">${label}</div>
+          <div class="tooltip-row">
+            <span>Year: ${d.year}</span>
+            <strong style="margin-left: 10px;">$${d.avg.toFixed(0)}</strong>
+          </div>
+        `)
+        d3.select(this).transition().duration(200).attr('r', 10).attr('fill', color).attr('stroke', '#fff')
       })
       .on('mousemove', (event) => tip.move(event))
-      .on('mouseleave', () => tip.hide())
+      .on('mouseleave', function() {
+        tip.hide()
+        d3.select(this).transition().duration(200).attr('r', 6).attr('fill', 'transparent').attr('stroke', 'transparent')
+      })
   })
 
   // Legend

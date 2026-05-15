@@ -100,14 +100,25 @@ export function initStackedBar(containerId) {
           .style('cursor', 'pointer')
           .on('mouseover', function(event, d) {
             const key = d3.select(this.parentNode).datum().key
-            tip.show(`
-              <strong>${d.data.neighbourhood}</strong><br>
-              ${key}: <strong>${d.data[key]}</strong><br>
-              Tổng: ${d.data.total}
-            `, event)
+            tip.show(event, `
+              <div class="tooltip-header">${d.data.neighbourhood}</div>
+              <div class="tooltip-row">
+                <span><span class="dot" style="background-color: ${COLORS[key]}"></span>${key}</span>
+                <strong style="margin-left: 10px;">${d.data[key]} host</strong>
+              </div>
+              <div class="tooltip-row" style="border-top: 1px solid #eee; margin-top: 5px; padding-top: 5px;">
+                <span>Total</span>
+                <strong>${d.data.total}</strong>
+              </div>
+            `)
+            d3.selectAll('.layer rect').transition().duration(200).attr('opacity', 0.3)
+            d3.select(this).transition().duration(200).attr('opacity', 1)
           })
           .on('mousemove', (event) => tip.move(event))
-          .on('mouseleave', () => tip.hide())
+          .on('mouseleave', function() {
+            tip.hide()
+            d3.selectAll('.layer rect').transition().duration(200).attr('opacity', 1)
+          })
           .call(enter => enter.transition().duration(500)
             .attr('x', d => x(d[0]))
             .attr('width', d => x(d[1]) - x(d[0]))

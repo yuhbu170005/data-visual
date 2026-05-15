@@ -153,17 +153,19 @@ export function drawLollipop(data, containerId) {
     .attr('stroke-width', 1)
 
   marks.on('mouseover', (event, d) => {
-    tip.show(`
-      <strong>${d.neighbourhood}</strong><br/>
-      Room Type: ${d.roomType}<br/>
-      Avg Rating: <strong>${d.avg.toFixed(2)}</strong>
-    `, event)
-    d3.select(event.currentTarget).select('circle').attr('stroke', '#333').attr('stroke-width', 2)
+    tip.show(event, `
+      <div class="tooltip-header">${d.neighbourhood}</div>
+      <div class="tooltip-row">
+        <span><span class="dot" style="background-color: ${ROOM_COLORS[d.roomType]}"></span>${d.roomType}</span>
+        <strong style="margin-left: 10px;">${d.avg.toFixed(2)}</strong>
+      </div>
+    `)
+    d3.select(event.currentTarget).select('circle').transition().duration(200).attr('r', 10).attr('stroke', '#333').attr('stroke-width', 2)
   })
   .on('mousemove', (event) => tip.move(event))
   .on('mouseleave', (event) => {
     tip.hide()
-    d3.select(event.currentTarget).select('circle').attr('stroke', '#fff').attr('stroke-width', 1)
+    d3.select(event.currentTarget).select('circle').transition().duration(200).attr('r', 6).attr('stroke', '#fff').attr('stroke-width', 1)
   })
   .on('click', function(event, d) {
     event.stopPropagation(); // Chặn sự kiện click truyền xuống background rect
