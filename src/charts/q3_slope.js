@@ -41,7 +41,7 @@ export function drawQ3Slope(data, containerId) {
     // Colors
     const colorScale = d3.scaleOrdinal()
       .domain(["Entire home/apt", "Private room", "Shared room", "Hotel room"])
-      .range(["#4E79A7", "#F28E2B", "#E15759", "#76B7B2"]);
+      .range(["#4E79A7", "#F28E2B", "#76B7B2", "#E15759"]);
 
     const sizes = ["Small (1–2)", "Medium (3–4)", "Large (5+)"];
 
@@ -76,14 +76,18 @@ export function drawQ3Slope(data, containerId) {
         svg.append("text")
           .attr("class", "col-label")
           .attr("x", x)
-          .attr("y", subplotTopY - 10)
+          .attr("y", subplotTopY - 15)
+          .style("font-size", "14px")
+          .style("font-weight", "600")
           .text(size);
           
         // Bottom label
         svg.append("text")
           .attr("class", "col-label")
           .attr("x", x)
-          .attr("y", subplotBottomY + subplotHeight + 20)
+          .attr("y", subplotBottomY + subplotHeight + 25)
+          .style("font-size", "14px")
+          .style("font-weight", "600")
           .text(size);
       });
 
@@ -110,7 +114,9 @@ export function drawQ3Slope(data, containerId) {
       svg.append("text")
         .attr("class", "separator-text")
         .attr("x", margin.left + 40)
-        .attr("y", sepY - 5)
+        .attr("y", sepY - 7)
+        .style("font-size", "14px")
+        .style("font-weight", "600")
         .text("Does higher occupancy explain the revenue trend?");
 
       // Group Data
@@ -203,7 +209,8 @@ export function drawQ3Slope(data, containerId) {
             .attr("class", "val-label")
             .attr("data-type", roomType)
             .attr("x", xScale(d.size_segment))
-            .attr("y", yRevScale(d.avg_est_rev_monthly) - 10)
+            .attr("y", yRevScale(d.avg_est_rev_monthly) - 12)
+            .style("font-size", "12px")
             .text("$" + d3.format(",.0f")(d.avg_est_rev_monthly));
         });
 
@@ -268,7 +275,8 @@ export function drawQ3Slope(data, containerId) {
             .attr("class", "val-label")
             .attr("data-type", roomType)
             .attr("x", xScale(d.size_segment))
-            .attr("y", yOccScale(d.avg_occupancy) - 10)
+            .attr("y", yOccScale(d.avg_occupancy) - 12)
+            .style("font-size", "12px")
             .text((d.avg_occupancy * 100).toFixed(1) + "%");
         });
 

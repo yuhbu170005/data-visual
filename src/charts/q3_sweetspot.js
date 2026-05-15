@@ -3,8 +3,8 @@ import { store } from '../store.js';
 
 export function drawQ3Sweetspot(data, containerId) {
     const width = 960;
-    const height = 620;
-    const margin = { top: 60, right: 40, bottom: 150, left: 80 };
+    const height = 700;
+    const margin = { top: 60, right: 40, bottom: 200, left: 80 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -39,7 +39,7 @@ export function drawQ3Sweetspot(data, containerId) {
     // Colors
     const colorScale = d3.scaleOrdinal()
       .domain(["Entire home/apt", "Private room", "Shared room", "Hotel room"])
-      .range(["#4E79A7", "#F28E2B", "#E15759", "#76B7B2"]);
+      .range(["#4E79A7", "#F28E2B", "#76B7B2", "#E15759"]);
 
     // Shapes
     const shapeScale = d3.scaleOrdinal()
@@ -92,8 +92,10 @@ export function drawQ3Sweetspot(data, containerId) {
       xAxisG.append("text")
         .attr("class", "axis-label")
         .attr("x", innerWidth / 2)
-        .attr("y", 40)
+        .attr("y", 50)
         .style("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("font-weight", "500")
         .text("Average nightly price (USD)");
 
       const yAxisG = g.append("g")
@@ -103,8 +105,10 @@ export function drawQ3Sweetspot(data, containerId) {
         .attr("class", "axis-label")
         .attr("transform", "rotate(-90)")
         .attr("x", -innerHeight / 2)
-        .attr("y", -45)
+        .attr("y", -55)
         .style("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("font-weight", "500")
         .text("Occupancy rate");
 
       // Medians & Quadrants
@@ -127,24 +131,26 @@ export function drawQ3Sweetspot(data, containerId) {
 
       // Quadrant Labels
       const pad = 10;
-      g.append("text").attr("class", "quadrant-label")
-        .attr("x", innerWidth - pad).attr("y", pad)
-        .style("text-anchor", "end")
-        .text("Sweet spot 🎯");
+      // g.append("text").attr("class", "quadrant-label")
+      //   .attr("x", innerWidth - pad).attr("y", pad)
+      //   .style("text-anchor", "end")
+      //   .text("Sweet spot 🎯");
 
-      g.append("text").attr("class", "quadrant-label")
-        .attr("x", pad).attr("y", pad)
-        .style("text-anchor", "start")
-        .text("Tăng giá đi ↑");
+      // g.append("text").attr("class", "quadrant-label")
+      //   .attr("x", pad).attr("y", pad)
+      //   .style("text-anchor", "start")
+      //   .text("Tăng giá đi ↑");
 
-      g.append("text").attr("class", "quadrant-label")
-        .attr("x", innerWidth - pad).attr("y", innerHeight - pad)
-        .style("text-anchor", "end")
-        .text("Đang định giá sai ⚠");
+      // g.append("text").attr("class", "quadrant-label")
+      //   .attr("x", innerWidth - pad).attr("y", innerHeight - pad)
+      //   .style("text-anchor", "end")
+      //   .text("Đang định giá sai ⚠");
 
       g.append("text").attr("class", "quadrant-label")
         .attr("x", pad).attr("y", innerHeight - pad)
         .style("text-anchor", "start")
+        .style("font-size", "14px")
+        .style("font-weight", "600")
         .text("Cold zone ❄");
 
       // State - now synchronized with global store
@@ -219,6 +225,8 @@ export function drawQ3Sweetspot(data, containerId) {
         .attr("class", "legend-title")
         .attr("x", columns[0])
         .attr("y", roomTypeY)
+        .style("font-size", "15px")
+        .style("font-weight", "600")
         .text("Room type");
       roomTypeY += 18;
 
@@ -237,8 +245,9 @@ export function drawQ3Sweetspot(data, containerId) {
 
         item.append("text")
           .attr("class", "legend-text")
-          .attr("x", 12)
-          .attr("y", 4)
+          .attr("x", 14)
+          .attr("y", 5)
+          .style("font-size", "14px")
           .text(rt);
 
         roomTypeY += 20;
@@ -250,6 +259,8 @@ export function drawQ3Sweetspot(data, containerId) {
         .attr("class", "legend-title")
         .attr("x", columns[1])
         .attr("y", segmentY)
+        .style("font-size", "15px")
+        .style("font-weight", "600")
         .text("Accommodates");
       segmentY += 18;
 
@@ -263,8 +274,9 @@ export function drawQ3Sweetspot(data, containerId) {
 
         item.append("text")
           .attr("class", "legend-text")
-          .attr("x", 12)
-          .attr("y", 4)
+          .attr("x", 14)
+          .attr("y", 5)
+          .style("font-size", "14px")
           .text(seg.split(" ")[0]);
 
         segmentY += 20;
@@ -276,6 +288,8 @@ export function drawQ3Sweetspot(data, containerId) {
         .attr("class", "legend-title")
         .attr("x", columns[2])
         .attr("y", sizeY)
+        .style("font-size", "15px")
+        .style("font-weight", "600")
         .text("Est. monthly rev");
       sizeY += 24;
 
@@ -292,8 +306,9 @@ export function drawQ3Sweetspot(data, containerId) {
 
         item.append("text")
           .attr("class", "legend-text")
-          .attr("x", 25)
-          .attr("y", 4)
+          .attr("x", 30)
+          .attr("y", 5)
+          .style("font-size", "14px")
           .text("$" + d3.format(",")(val));
 
         sizeY += Math.max(r * 2 + 10, 25);

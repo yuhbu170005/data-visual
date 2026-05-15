@@ -125,7 +125,7 @@ export function drawLineChart(data, containerId) {
   const legendEl = document.createElement('div')
   legendEl.className = 'legend'
   legendEl.style.color = '#333'
-  legendEl.innerHTML = `<div style="width:100%; font-weight:600; font-size:14px; margin-bottom:4px;">Loại Host (Host type)</div>`
+  legendEl.innerHTML = `<div style="width:100%; font-weight:600; font-size:14px; margin-bottom:4px;">Host type</div>`
   Object.entries(COLORS).forEach(([key, color]) => {
     const label = key === 'true' ? 'Superhost' : 'Non-superhost'
     legendEl.innerHTML += `<div class="legend-item"><span class="legend-dot" style="background:${color}"></span>${label}</div>`

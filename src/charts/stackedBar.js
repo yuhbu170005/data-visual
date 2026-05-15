@@ -36,7 +36,7 @@ export function initStackedBar(containerId) {
   // Legend
   const legendEl = document.createElement('div')
   legendEl.className = 'legend'
-  legendEl.innerHTML = `<div style="width:100%; font-weight:600; font-size:14px; margin-bottom:4px; color:#333;">Quy mô sở hữu (Host type)</div>`
+  legendEl.innerHTML = `<div style="width:100%; font-weight:600; font-size:14px; margin-bottom:4px; color:#333;">Host Type</div>`
   Object.entries(COLORS).forEach(([label, color]) => {
     legendEl.innerHTML += `<div class="legend-item"><span class="legend-rect" style="background:${color}"></span>${label}</div>`
   })

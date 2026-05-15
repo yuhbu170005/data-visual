@@ -40,7 +40,7 @@
   fill: #222;
 }
 .subtitle {
-  font-size: 12px;
+  font-size: 14px;
   fill: #666;
 }
 .bar-segment {
@@ -48,22 +48,30 @@
   cursor: pointer;
 }
 .legend-title {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 600;
   fill: #333;
 }
 .legend-text {
-  font-size: 11px;
+  font-size: 13px;
   fill: #555;
 }
 .legend-item {
   cursor: pointer;
 }
 .peak-annotation {
-  font-size: 11px;
+  font-size: 13px;
   fill: #555;
   font-style: italic;
   text-anchor: middle;
+}
+.axis-label {
+  font-size: 15px;
+  font-weight: 500;
+  fill: #444;
+}
+.tick text {
+  font-size: 12px;
 }
 .peak-arrow {
   font-size: 12px;

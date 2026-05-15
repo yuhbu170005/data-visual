@@ -7,8 +7,8 @@ export function drawQ7ReviewsArea(dataObj, containerId) {
   d3.select(container).selectAll('*').remove();
 
   const width = container.clientWidth || 900;
-  const height = 450;
-  const margin = { top: 40, right: 150, bottom: 60, left: 60 };
+  const height = 580;
+  const margin = { top: 40, right: 40, bottom: 140, left: 70 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -85,7 +85,7 @@ export function drawQ7ReviewsArea(dataObj, containerId) {
     .attr('y', -45)
     .attr('text-anchor', 'middle')
     .attr('fill', '#333')
-    .attr('font-size', '13px')
+    .attr('font-size', '15px')
     .attr('font-weight', '500')
     .text('Count of Reviews');
 
@@ -198,21 +198,29 @@ export function drawQ7ReviewsArea(dataObj, containerId) {
     paths.attr("opacity", 0.85).attr("stroke-width", 0.5);
   });
 
-  // LEGEND
+  // LEGEND AT BOTTOM
   const legendGroup = svg.append("g")
-    .attr("transform", `translate(${width - margin.right + 20}, ${margin.top})`);
+    .attr("transform", `translate(${margin.left}, ${margin.top + innerHeight + 80})`);
     
   legendGroup.append("text")
-    .attr("font-size", "12px")
+    .attr("font-size", "14px")
     .attr("font-weight", "600")
-    .attr("y", -10)
-    .text("Top 5 Listings");
+    .attr("y", -15)
+    .text("Top 5 Listings (ID)");
+
+  // 3 items per row to ensure visibility of long IDs
+  const itemsPerRow = 3;
+  const legendItemWidth = 180; 
 
   const legends = legendGroup.selectAll("g.legend-item")
     .data(keys)
     .join("g")
     .attr("class", "legend-item")
-    .attr("transform", (d, i) => `translate(0, ${i * 20})`)
+    .attr("transform", (d, i) => {
+      const xPos = (i % itemsPerRow) * legendItemWidth;
+      const yPos = Math.floor(i / itemsPerRow) * 30;
+      return `translate(${xPos}, ${yPos})`;
+    })
     .style("cursor", "pointer")
     .on("mouseover", function(event, key) {
       paths.attr("opacity", d => d.key === key ? 1 : 0.1);
@@ -222,14 +230,14 @@ export function drawQ7ReviewsArea(dataObj, containerId) {
     });
 
   legends.append("rect")
-    .attr("width", 12)
-    .attr("height", 12)
+    .attr("width", 14)
+    .attr("height", 14)
     .attr("fill", d => color(d));
 
   legends.append("text")
     .attr("x", 20)
-    .attr("y", 10)
-    .attr("font-size", "11px")
+    .attr("y", 12)
+    .attr("font-size", "13px")
     .attr("fill", "#333")
     .text(d => d);
 }
