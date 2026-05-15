@@ -59,8 +59,9 @@ export function drawQ3Slope(data, containerId) {
         .domain([0, maxRev * 1.15])
         .range([subplotHeight, 0]);
 
+      const maxOcc = d3.max(data, d => d.avg_occupancy) || 0.6;
       const yOccScale = d3.scaleLinear()
-        .domain([0, 1])
+        .domain([0, Math.min(1, maxOcc * 1.2)])
         .range([subplotHeight, 0]);
 
       // Draw vertical column lines and labels
