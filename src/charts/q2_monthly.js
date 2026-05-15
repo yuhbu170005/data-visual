@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { createTooltip } from '../components/tooltip.js';
 
 export function drawQ2Monthly(data, containerId) {
     const width = 960;
@@ -32,8 +33,7 @@ export function drawQ2Monthly(data, containerId) {
     //   .text("Calendar period: Nov 2025 – Nov 2026 · Booked days × nightly price");
 
     // Tooltip
-    const tooltip = d3.select("body").append("div")
-      .attr("class", "tooltip");
+    const tip = createTooltip();
 
     // Colors & Order
     const stackOrder = ["Staten Island", "Queens", "Brooklyn", "Bronx", "Manhattan"];
@@ -161,22 +161,21 @@ export function drawQ2Monthly(data, containerId) {
               const val = monthData[borough] || 0;
               html += `<div class="tooltip-row">
                 <span><span class="dot" style="background-color: ${colorScale(borough)}"></span>${borough}</span>
-                <span>$${(val / 1e6).toFixed(1)}M</span>
+                <strong style="margin-left: 10px;">$${(val / 1e6).toFixed(1)}M</strong>
               </div>`;
             });
             html += `<div class="tooltip-row tooltip-total">
               <span>Total</span>
-              <span>$${(total / 1e6).toFixed(1)}M</span>
+              <strong>$${(total / 1e6).toFixed(1)}M</strong>
             </div>`;
 
-            tooltip.style("visibility", "visible").html(html);
+            tip.show(event, html);
           })
           .on("mousemove", function(event) {
-            tooltip.style("top", (event.pageY - 20) + "px")
-              .style("left", (event.pageX + 15) + "px");
+            tip.move(event);
           })
           .on("mouseout", function() {
-            tooltip.style("visibility", "hidden");
+            tip.hide();
             updateOpacities();
           });
 
